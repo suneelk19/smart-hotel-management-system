@@ -1,0 +1,359 @@
+{% extends 'base.html' %}
+
+{% block title %}
+Room Management
+{% endblock %}
+
+{% block content %}
+
+<div class="container mt-5">
+
+    <!-- ============================================= -->
+    <!-- Page Heading + Add Room Button -->
+    <!-- ============================================= -->
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+
+        <h2>Room Management</h2>
+
+        {% if user.is_staff %}
+        <a href="{% url 'add_room' %}"
+           class="btn btn-primary">
+
+            + Add New Room
+
+        </a>
+        {% endif %}
+
+    </div>
+
+
+    <!-- ============================================= -->
+    <!-- Date Availability Filter (Customers only)   -->
+    <!-- ============================================= -->
+
+    {% if not user.is_staff %}
+    <div class="card mb-4 border-primary">
+        <div class="card-header bg-primary text-white">
+            <strong>🗓 Check Room Availability for Your Dates</strong>
+        </div>
+        <div class="card-body">
+            <form method="GET" class="row g-3 align-items-end" id="date-availability-form">
+
+                {% if query %}
+                <input type="hidden" name="q" value="{{ query }}">
+                {% endif %}
+
+                <div class="col-md-4">
+                    <label for="check_in" class="form-label fw-semibold">Check-in Date</label>
+                    <input
+                        type="date"
+                        name="check_in"
+                        id="check_in"
+                        class="form-control"
+                        value="{{ check_in }}"
+                        required>
+                </div>
+
+                <div class="col-md-4">
+                    <label for="check_out" class="form-label fw-semibold">Check-out Date</label>
+                    <input
+                        type="date"
+                        name="check_out"
+                        id="check_out"
+                        class="form-control"
+                        value="{{ check_out }}"
+                        required>
+                </div>
+
+                <div class="col-md-2">
+                    <button type="submit" class="btn btn-primary w-100">
+                        🔍 Check
+                    </button>
+                </div>
+
+                <div class="col-md-2">
+                    <a href="{% url 'rooms' %}" class="btn btn-outline-secondary w-100">
+                        ✖ Clear
+                    </a>
+                </div>
+
+            </form>
+
+            {% if date_error %}
+            <div class="alert alert-danger mt-3 mb-0">
+                ⚠ {{ date_error }}
+            </div>
+            {% endif %}
+
+            {% if date_filter_active %}
+            <div class="alert alert-success mt-3 mb-0">
+                ✅ Showing rooms available from <strong>{{ check_in }}</strong> to <strong>{{ check_out }}</strong>.
+            </div>
+            {% endif %}
+
+        </div>
+    </div>
+    {% endif %}
+
+
+    <!-- ============================================= -->
+    <!-- Search Form                                 -->
+    <!-- ============================================= -->
+
+    <form method="GET" class="row mb-4">
+
+        {% if check_in %}
+        <input type="hidden" name="check_in" value="{{ check_in }}">
+        {% endif %}
+        {% if check_out %}
+        <input type="hidden" name="check_out" value="{{ check_out }}">
+        {% endif %}
+
+        <div class="col-md-10">
+
+            <input
+                type="text"
+                name="q"
+                class="form-control"
+                placeholder="Search by Room Number or Room Type..."
+                value="{{ query }}">
+
+        </div>
+
+        <div class="col-md-2">
+
+            <button
+                type="submit"
+                class="btn btn-success w-100">
+
+                Search
+
+            </button>
+
+        </div>
+
+    </form>
+
+
+    <!-- ============================================= -->
+    <!-- Room Table -->
+    <!-- ============================================= -->
+
+    <div class="table-responsive">
+
+        <table class="table table-bordered table-hover align-middle">
+
+            <thead class="table-dark text-center">
+
+                <tr>
+
+                    <th>Image</th>
+
+                    <th>Room Number</th>
+
+                    <th>Room Type</th>
+
+                    <th>Price</th>
+
+                    <th>Status</th>
+
+                    <th width="180">Action</th>
+
+                </tr>
+
+            </thead>
+
+            <tbody>
+
+                {% for room in rooms %}
+
+                <tr>
+
+                    <!-- ============================================= -->
+                    <!-- Room Image -->
+                    <!-- ============================================= -->
+
+                    <td class="text-center">
+
+                        {% if room.image %}
+
+                            <img
+                                src="{{ room.image.url }}"
+                                alt="Room Image"
+                                width="110"
+                                height="80"
+                                class="rounded shadow-sm"
+                                style="object-fit:cover;">
+
+                        {% else %}
+
+                            <span class="text-danger">
+
+                                No Image
+
+                            </span>
+
+                        {% endif %}
+
+                    </td>
+
+
+                    <!-- Room Number -->
+
+                    <td>
+
+                        {{ room.room_number }}
+
+                    </td>
+
+
+                    <!-- Room Type -->
+
+                    <td>
+
+                        {{ room.room_type }}
+
+                    </td>
+
+
+                    <!-- Price -->
+
+                    <td>
+
+                        <strong class="text-success">
+
+                            ₹ {{ room.price }}
+
+                        </strong>
+
+                    </td>
+
+
+                    <!-- Room Status -->
+
+                    <td>
+
+                        {% if room.available %}
+
+                            <span class="badge bg-success">
+
+                                Available
+
+                            </span>
+
+                        {% else %}
+
+                            <span class="badge bg-danger">
+
+                                Occupied
+
+                            </span>
+
+                        {% endif %}
+
+                    </td>
+
+
+                    <!-- Action Buttons -->
+
+                    {% comment %} <td>
+
+                        {% if user.is_staff %}
+                        <a href="{% url 'edit_room' room.id %}"
+                           class="btn btn-warning btn-sm">
+
+                            Edit
+
+                        </a>
+
+                        <a href="{% url 'delete_room' room.id %}"
+                           class="btn btn-danger btn-sm"
+                           onclick="return confirm('Delete this room?')">
+
+                            Delete
+
+                        </a>
+                        {% elif user.is_authenticated and room.available %}
+                        <a href="{% url 'add_booking' %}?room={{ room.id }}{% if check_in %}&check_in={{ check_in }}{% endif %}{% if check_out %}&check_out={{ check_out }}{% endif %}"
+                           class="btn btn-primary btn-sm">
+
+                            Book Now
+
+                        </a>
+                        {% elif user.is_authenticated %}
+                        <span class="text-muted small">Not available</span>
+                        {% endif %}
+
+                    </td> {% endcomment %}
+
+
+<!-- Action Buttons -->
+<td>
+    <!-- Room details sabhi users dekh sakte hain -->
+    <a href="{% url 'room_detail' room.id %}"
+       class="btn btn-info btn-sm text-white mb-1">
+        View Details
+    </a>
+
+    {% if user.is_staff %}
+
+        <a href="{% url 'edit_room' room.id %}"
+           class="btn btn-warning btn-sm mb-1">
+            Edit
+        </a>
+
+        <a href="{% url 'delete_room' room.id %}"
+           class="btn btn-danger btn-sm mb-1"
+           onclick="return confirm('Delete this room?')">
+            Delete
+        </a>
+
+    {% elif user.is_authenticated and room.available %}
+
+        <a href="{% url 'add_booking' %}?room={{ room.id }}{% if check_in %}&check_in={{ check_in }}{% endif %}{% if check_out %}&check_out={{ check_out }}{% endif %}"
+           class="btn btn-primary btn-sm mb-1">
+            Book Now
+        </a>
+
+    {% elif user.is_authenticated %}
+
+        <span class="text-muted small">Not available</span>
+
+    {% else %}
+
+        <a href="{% url 'login' %}"
+           class="btn btn-primary btn-sm mb-1">
+            Login to Book
+        </a>
+
+    {% endif %}
+</td>
+
+
+
+                </tr>
+
+                {% empty %}
+
+                <tr>
+
+                    <td colspan="6" class="text-center text-danger">
+
+                        No Rooms Found.
+
+                    </td>
+
+                </tr>
+
+                {% endfor %}
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+</div>
+
+{% endblock %}

@@ -1,0 +1,1005 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}
+Admin Dashboard
+{% endblock %}
+
+{% block content %}
+
+<div class="container-fluid mt-4">
+
+    <!-- Dashboard Header -->
+
+    <div class="card shadow border-0 mb-4">
+        <div class="card-body bg-primary text-white">
+
+            <div class="row align-items-center">
+
+                <div class="col-md-8">
+
+                    <h2 class="mb-1">
+                        👋 Welcome, {{ request.user.username }}
+                    </h2>
+
+                    <p class="mb-0">
+                        Smart Hotel Management System - Admin Dashboard
+                    </p>
+
+                </div>
+
+                <div class="col-md-4 text-end">
+
+                    <h5>
+                        {% now "l" %}
+                    </h5>
+
+                    <h6>
+                        {% now "d F Y" %}
+                    </h6>
+
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+
+
+    <!-- Dashboard Cards -->
+
+    <div class="row">
+
+        <div class="col-lg-3 col-md-6 mb-4">
+            <div class="card bg-primary text-white shadow">
+                <div class="card-body text-center">
+
+                    <h1>🏨</h1>
+
+                    <h2>{{ total_rooms }}</h2>
+
+                    <h6>Total Rooms</h6>
+
+                </div>
+            </div>
+        </div>
+
+
+        <div class="col-lg-3 col-md-6 mb-4">
+            <div class="card bg-success text-white shadow">
+                <div class="card-body text-center">
+
+                    <h1>🟢</h1>
+
+                    <h2>{{ available_rooms }}</h2>
+
+                    <h6>Available Rooms</h6>
+
+                </div>
+            </div>
+        </div>
+
+
+        <div class="col-lg-3 col-md-6 mb-4">
+            <div class="card bg-danger text-white shadow">
+                <div class="card-body text-center">
+
+                    <h1>🔴</h1>
+
+                    <h2>{{ occupied_rooms }}</h2>
+
+                    <h6>Occupied Rooms</h6>
+
+                </div>
+            </div>
+        </div>
+
+
+        <div class="col-lg-3 col-md-6 mb-4">
+            <div class="card bg-warning shadow">
+                <div class="card-body text-center">
+
+                    <h1>📅</h1>
+
+                    <h2>{{ total_bookings }}</h2>
+
+                    <h6>Total Bookings</h6>
+
+                </div>
+            </div>
+        </div>
+
+
+        <div class="col-lg-3 col-md-6 mb-4">
+            <div class="card bg-info text-white shadow">
+                <div class="card-body text-center">
+
+                    <h1>👥</h1>
+
+                    <h2>{{ total_customers }}</h2>
+
+                    <h6>Total Customers</h6>
+
+                </div>
+            </div>
+        </div>
+
+
+        <div class="col-lg-3 col-md-6 mb-4">
+            <div class="card bg-secondary text-white shadow">
+                <div class="card-body text-center">
+
+                    <h1>👨‍💼</h1>
+
+                    <h2>{{ total_staff }}</h2>
+
+                    <h6>Total Staff</h6>
+
+                </div>
+            </div>
+        </div>
+
+
+        <div class="col-lg-3 col-md-6 mb-4">
+            <div class="card bg-dark text-white shadow">
+                <div class="card-body text-center">
+
+                    <h1>💳</h1>
+
+                    <h2>{{ total_payments }}</h2>
+
+                    <h6>Total Payments</h6>
+
+                </div>
+            </div>
+        </div>
+
+
+        <div class="col-lg-3 col-md-6 mb-4">
+            <div class="card bg-success text-white shadow">
+                <div class="card-body text-center">
+
+                    <h1>⭐</h1>
+
+                    <h2>{{ total_feedback }}</h2>
+
+                    <h6>Total Feedback</h6>
+
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+
+    <!-- Quick Actions -->
+
+    <div class="card shadow border-0 mt-4">
+
+        <div class="card-header bg-dark text-white">
+
+            <h5 class="mb-0">
+                ⚡ Quick Actions
+            </h5>
+
+        </div>
+
+        <div class="card-body text-center">
+
+            <a href="{% url 'add_room' %}" class="btn btn-primary m-2">
+                ➕ Add Room
+            </a>
+
+            <a href="{% url 'add_booking' %}" class="btn btn-success m-2">
+                📅 Add Booking
+            </a>
+
+            <a href="{% url 'add_payment' %}" class="btn btn-warning m-2">
+                💳 Add Payment
+            </a>
+
+            <a href="{% url 'add_staff' %}" class="btn btn-info m-2">
+                👨‍💼 Add Staff
+            </a>
+
+            <a href="{% url 'add_feedback' %}" class="btn btn-danger m-2">
+                ⭐ Feedback
+            </a>
+
+            <a href="{% url 'admin_refund_list' %}" class="btn btn-dark m-2">
+                🔄 Manage Refunds
+            </a>
+
+        </div>
+
+    </div>
+
+
+    <!-- ========================================== -->
+    <!-- System Statistics -->
+    <!-- ========================================== -->
+
+    <div class="row mt-5">
+
+        <div class="col-md-3 mb-4">
+
+            <div class="card border-success shadow">
+
+                <div class="card-body text-center">
+
+                    <h2 class="text-success">
+                        {{ available_rooms }}
+                    </h2>
+
+                    <h6>
+                        🟢 Available Rooms
+                    </h6>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="col-md-3 mb-4">
+
+            <div class="card border-danger shadow">
+
+                <div class="card-body text-center">
+
+                    <h2 class="text-danger">
+                        {{ occupied_rooms }}
+                    </h2>
+
+                    <h6>
+                        🔴 Occupied Rooms
+                    </h6>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="col-md-3 mb-4">
+
+            <div class="card border-warning shadow">
+
+                <div class="card-body text-center">
+
+                    <h2 class="text-warning">
+
+                        ₹ {{ total_revenue|default:0 }}
+
+                    </h2>
+
+                    <h6>
+
+                        💰 Total Revenue
+
+                    </h6>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="col-md-3 mb-4">
+
+            <div class="card border-primary shadow">
+
+                <div class="card-body text-center">
+
+                    <h2 class="text-primary">
+
+                        {{ today_bookings|default:0 }}
+
+                    </h2>
+
+                    <h6>
+
+                        📅 Today's Bookings
+
+                    </h6>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- ========================================== -->
+    <!-- Hotel Progress -->
+    <!-- ========================================== -->
+
+    <div class="row mt-4">
+
+        <div class="col-lg-6">
+
+            <div class="card shadow border-0">
+
+                <div class="card-header bg-dark text-white">
+
+                    <strong>
+
+                        📊 Hotel Progress
+
+                    </strong>
+
+                </div>
+
+                <div class="card-body">
+
+                    <label class="fw-bold">
+
+                        Total Rooms
+
+                    </label>
+
+                    <div class="progress mb-3" style="height:25px;">
+
+                        <div class="progress-bar bg-primary" style="width:100%;">
+
+                            {{ total_rooms }}
+
+                        </div>
+
+                    </div>
+
+
+                    <label class="fw-bold">
+
+                        Available Rooms
+
+                    </label>
+
+                    <div class="progress mb-3" style="height:25px;">
+
+                        <div class="progress-bar bg-success"
+                            style="width:{% widthratio available_rooms total_rooms 100 %}%">
+
+                            {{ available_rooms }}
+
+                        </div>
+
+                    </div>
+
+
+                    <label class="fw-bold">
+
+                        Occupied Rooms
+
+                    </label>
+
+                    <div class="progress" style="height:25px;">
+
+                        <div class="progress-bar bg-danger"
+                            style="width:{% widthratio occupied_rooms total_rooms 100 %}%">
+
+                            {{ occupied_rooms }}
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div class="col-lg-6">
+
+            <div class="card shadow border-0">
+
+                <div class="card-header bg-success text-white">
+
+                    <strong>
+
+                        💰 Revenue Summary
+
+                    </strong>
+
+                </div>
+
+                <div class="card-body text-center">
+
+                    <h1 class="display-5">
+
+                        ₹ {{ total_revenue|default:0 }}
+
+                    </h1>
+
+                    <p class="text-muted">
+
+                        Total Revenue Generated
+
+                    </p>
+
+                    <hr>
+
+                    <div class="row">
+
+                        <div class="col-6">
+
+                            <h5>
+
+                                {{ total_payments }}
+
+                            </h5>
+
+                            <small>
+
+                                Payments
+
+                            </small>
+
+                        </div>
+
+                        <div class="col-6">
+
+                            <h5>
+
+                                {{ total_bookings }}
+
+                            </h5>
+
+                            <small>
+
+                                Bookings
+
+                            </small>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- ========================================== -->
+    <!-- Booking Analytics -->
+    <!-- ========================================== -->
+
+    <div class="row mt-5">
+
+        <div class="col-lg-8 mx-auto">
+
+            <div class="card shadow border-0">
+
+                <div class="card-header bg-primary text-white">
+
+                    <h5 class="mb-0">
+
+                        📈 Booking Status Analytics
+
+                    </h5>
+
+                </div>
+
+                <div class="card-body">
+
+                    <canvas id="bookingChart" height="120"></canvas>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- ============================================= -->
+    <!-- Recent Payments -->
+    <!-- ============================================= -->
+
+    <div class="card shadow mb-5">
+
+        <div class="card-header bg-success text-white">
+            <h4 class="mb-0">💳 Recent Payments</h4>
+        </div>
+
+        <div class="card-body">
+
+            <div class="table-responsive">
+
+                <table class="table table-bordered table-hover">
+
+                    <thead class="table-dark">
+
+                        <tr>
+                            <th>Receipt</th>
+                            <th>Customer</th>
+                            <th>Amount</th>
+                            <th>Method</th>
+                            <th>Status</th>
+                        </tr>
+
+                    </thead>
+
+                    <tbody>
+
+                        {% for payment in recent_payments %}
+
+                        <tr>
+
+                            <td>{{ payment.receipt_number }}</td>
+
+                            <td>{{ payment.booking.user.username }}</td>
+
+                            <td>₹ {{ payment.amount }}</td>
+
+                            <td>{{ payment.payment_method }}</td>
+
+                            <td>
+
+                                {% if payment.status == "Paid" %}
+
+                                <span class="badge bg-success">
+                                    Paid
+                                </span>
+
+                                {% elif payment.status == "Pending" %}
+
+                                <span class="badge bg-warning text-dark">
+                                    Pending
+                                </span>
+
+                                {% else %}
+
+                                <span class="badge bg-danger">
+                                    Failed
+                                </span>
+
+                                {% endif %}
+
+                            </td>
+
+                        </tr>
+
+                        {% empty %}
+
+                        <tr>
+
+                            <td colspan="5" class="text-center">
+
+                                No Recent Payments
+
+                            </td>
+
+                        </tr>
+
+                        {% endfor %}
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- ============================================= -->
+    <!-- Recent Feedback -->
+    <!-- ============================================= -->
+
+    <div class="card shadow mb-5">
+
+        <div class="card-header bg-warning">
+
+            <h4 class="mb-0">
+
+                ⭐ Recent Feedback
+
+            </h4>
+
+        </div>
+
+        <div class="card-body">
+
+            <div class="table-responsive">
+
+                <table class="table table-bordered table-hover">
+
+                    <thead class="table-dark">
+
+                        <tr>
+
+                            <th>Customer</th>
+
+                            <th>Subject</th>
+
+                            <th>Message</th>
+
+                            <th>Date</th>
+
+                        </tr>
+
+                    </thead>
+
+                    <tbody>
+
+                        {% for feedback in recent_feedback %}
+
+                        <tr>
+
+                            <td>{{ feedback.user.username }}</td>
+
+                            <td>{{ feedback.subject }}</td>
+
+                            <td>{{ feedback.message|truncatechars:40 }}</td>
+
+                            <td>{{ feedback.created_at }}</td>
+
+                        </tr>
+
+                        {% empty %}
+
+                        <tr>
+
+                            <td colspan="4" class="text-center">
+
+                                No Feedback Found
+
+                            </td>
+
+                        </tr>
+
+                        {% endfor %}
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- ============================================= -->
+    <!-- Recent Staff -->
+    <!-- ============================================= -->
+
+    <div class="card shadow mb-5">
+
+        <div class="card-header bg-info text-white">
+
+            <h4 class="mb-0">
+
+                👨‍💼 Recent Staff Members
+
+            </h4>
+
+        </div>
+
+        <div class="card-body">
+
+            <div class="table-responsive">
+
+                <table class="table table-bordered table-hover">
+
+                    <thead class="table-dark">
+
+                        <tr>
+
+                            <th>Name</th>
+
+                            <th>Phone</th>
+
+                            <th>Email</th>
+
+                            <th>Designation</th>
+
+                        </tr>
+
+                    </thead>
+
+                    <tbody>
+
+                        {% for staff in recent_staff %}
+
+                        <tr>
+
+                            <td>{{ staff.name }}</td>
+
+                            <td>{{ staff.phone }}</td>
+
+                            <td>{{ staff.email }}</td>
+
+                            <td>{{ staff.designation }}</td>
+
+                        </tr>
+
+                        {% empty %}
+
+                        <tr>
+
+                            <td colspan="4" class="text-center">
+
+                                No Staff Found
+
+                            </td>
+
+                        </tr>
+
+                        {% endfor %}
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+
+    <!-- ================================================= -->
+    <!-- Latest Activity -->
+    <!-- ================================================= -->
+
+    <div class="row mt-5">
+
+        <div class="col-md-6">
+
+            <div class="card shadow">
+
+                <div class="card-header bg-secondary text-white">
+
+                    Latest Activities
+
+                </div>
+
+                <div class="card-body">
+
+                    <ul class="list-group">
+
+                        <li class="list-group-item">
+
+                            🏨 Rooms :
+                            <strong>{{ total_rooms }}</strong>
+
+                        </li>
+
+                        <li class="list-group-item">
+
+                            📅 Bookings :
+                            <strong>{{ total_bookings }}</strong>
+
+                        </li>
+
+                        <li class="list-group-item">
+
+                            💳 Payments :
+                            <strong>{{ total_payments }}</strong>
+
+                        </li>
+
+                        <li class="list-group-item">
+
+                            ⭐ Feedback :
+                            <strong>{{ total_feedback }}</strong>
+
+                        </li>
+
+                        <li class="list-group-item">
+
+                            👨‍💼 Staff :
+                            <strong>{{ total_staff }}</strong>
+
+                        </li>
+
+                    </ul>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- ================================================= -->
+        <!-- Admin Profile -->
+        <!-- ================================================= -->
+
+        <div class="col-md-6">
+
+            <div class="card shadow">
+
+                <div class="card-header bg-primary text-white">
+
+                    👤 Administrator
+
+                </div>
+
+                <div class="card-body text-center">
+
+                    <img src="https://ui-avatars.com/api/?name={{request.user.username}}&background=0D6EFD&color=fff&size=120"
+                        class="rounded-circle mb-3">
+
+                    <h4>{{ request.user.username }}</h4>
+
+                    <p>{{ request.user.email }}</p>
+
+                    <span class="badge bg-success">
+
+                        Online
+
+                    </span>
+
+                    <hr>
+
+                    <table class="table">
+
+                        <tr>
+
+                            <th>Project</th>
+
+                            <td>Smart Hotel Management System</td>
+
+                        </tr>
+
+                        <tr>
+
+                            <th>Framework</th>
+
+                            <td>Django 6</td>
+
+                        </tr>
+
+                        <tr>
+
+                            <th>Database</th>
+
+                            <td>SQLite</td>
+
+                        </tr>
+
+                        <tr>
+
+                            <th>Status</th>
+
+                            <td>
+
+                                <span class="badge bg-success">
+
+                                    Running
+
+                                </span>
+
+                            </td>
+
+                        </tr>
+
+                    </table>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <hr class="mt-5">
+
+
+    <div class="row text-center">
+
+        <div class="col-md-3">
+
+            🏨 Smart Hotel
+
+        </div>
+
+        <div class="col-md-3">
+
+            Django 6
+
+        </div>
+
+        <div class="col-md-3">
+
+            © {% now "Y" %}
+
+        </div>
+
+        <div class="col-md-3 text-success">
+
+            System Online
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}
+
+
+{% block scripts %}
+
+<script>
+
+    document.addEventListener("DOMContentLoaded", function () {
+
+        const ctx = document.getElementById("bookingChart");
+
+        new Chart(ctx, {
+
+            type: "doughnut",
+
+            data: {
+
+                labels: [
+                    "Approved",
+                    "Pending",
+                    "Confirmed",
+                    "Rejected",
+                    "Cancelled"
+                ],
+
+                datasets: [{
+
+                    data: [
+                        {{ approved|default:"0" }},
+                        {{ pending|default:"0" }},
+                        {{ confirmed|default:"0" }},
+                        {{ rejected|default:"0" }},
+                        {{ cancelled|default:"0" }}
+                    ],
+
+        backgroundColor: [
+        "#28a745",
+        "#ffc107",
+        "#17a2b8",
+        "#dc3545",
+        "#6c757d"
+    ],
+
+        borderWidth: 2
+
+}]
+
+},
+
+        options: {
+
+        responsive: true,
+
+        plugins: {
+
+            legend: {
+                position: "bottom"
+            }
+
+        }
+
+    }
+
+});
+
+});
+
+</script>
+
+{% endblock %}

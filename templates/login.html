@@ -1,0 +1,311 @@
+{% extends 'base.html' %}
+
+{% block title %}
+Login — Smart Hotel
+{% endblock %}
+
+{% block css %}
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+
+<style>
+    /* =============================================
+       LOGIN PAGE — SCOPED STYLES
+       Only affects the login page via .login-page
+       ============================================= */
+
+    .login-page {
+        min-height: calc(100vh - 140px);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 40px 16px;
+        background: linear-gradient(135deg, #0f1923 0%, #1a2a3a 40%, #0d1b2a 100%);
+        position: relative;
+        overflow: hidden;
+    }
+
+    /* Subtle decorative background orbs */
+    .login-page::before {
+        content: '';
+        position: absolute;
+        top: -40%;
+        left: -15%;
+        width: 550px;
+        height: 550px;
+        background: radial-gradient(circle, rgba(200, 170, 110, 0.06) 0%, transparent 70%);
+        border-radius: 50%;
+        pointer-events: none;
+    }
+
+    .login-page::after {
+        content: '';
+        position: absolute;
+        bottom: -35%;
+        right: -10%;
+        width: 480px;
+        height: 480px;
+        background: radial-gradient(circle, rgba(200, 170, 110, 0.04) 0%, transparent 70%);
+        border-radius: 50%;
+        pointer-events: none;
+    }
+
+    /* ---- Login Card ---- */
+    .login-card {
+        width: 100%;
+        max-width: 440px;
+        background: rgba(255, 255, 255, 0.03);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+        border: 1px solid rgba(200, 170, 110, 0.15);
+        border-radius: 20px;
+        padding: 48px 40px 40px;
+        position: relative;
+        z-index: 1;
+        box-shadow:
+            0 8px 32px rgba(0, 0, 0, 0.3),
+            0 0 0 1px rgba(255, 255, 255, 0.04) inset;
+        animation: loginCardFadeIn 0.6s ease-out;
+    }
+
+    @keyframes loginCardFadeIn {
+        from {
+            opacity: 0;
+            transform: translateY(24px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    /* ---- Header / Branding ---- */
+    .login-header {
+        text-align: center;
+        margin-bottom: 36px;
+    }
+
+    .login-header .hotel-icon {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 56px;
+        height: 56px;
+        border-radius: 16px;
+        background: linear-gradient(135deg, #c8aa6e, #a3863c);
+        margin-bottom: 18px;
+        box-shadow: 0 4px 16px rgba(200, 170, 110, 0.3);
+    }
+
+    .login-header .hotel-icon i {
+        font-size: 24px;
+        color: #fff;
+    }
+
+    .login-header h2 {
+        font-family: 'Playfair Display', serif;
+        font-weight: 700;
+        font-size: 26px;
+        color: #f0e6d3;
+        margin: 0 0 6px;
+        letter-spacing: 0.5px;
+    }
+
+    .login-header p {
+        font-family: 'Inter', sans-serif;
+        font-size: 14px;
+        color: rgba(240, 230, 211, 0.5);
+        margin: 0;
+        letter-spacing: 0.2px;
+    }
+
+    /* ---- Form Fields ---- */
+    .login-field {
+        margin-bottom: 22px;
+    }
+
+    .login-field label {
+        display: block;
+        font-family: 'Inter', sans-serif;
+        font-weight: 500;
+        font-size: 13px;
+        color: rgba(240, 230, 211, 0.7);
+        margin-bottom: 7px;
+        letter-spacing: 0.3px;
+        text-transform: uppercase;
+    }
+
+    .login-field input {
+        width: 100%;
+        padding: 13px 16px;
+        font-family: 'Inter', sans-serif;
+        font-size: 15px;
+        color: #f0e6d3;
+        background: rgba(255, 255, 255, 0.05);
+        border: 1px solid rgba(200, 170, 110, 0.2);
+        border-radius: 10px;
+        outline: none;
+        transition: all 0.3s ease;
+        box-sizing: border-box;
+    }
+
+    .login-field input::placeholder {
+        color: rgba(240, 230, 211, 0.3);
+    }
+
+    .login-field input:focus {
+        border-color: #c8aa6e;
+        background: rgba(200, 170, 110, 0.06);
+        box-shadow: 0 0 0 3px rgba(200, 170, 110, 0.1);
+    }
+
+    /* ---- Submit Button ---- */
+    .login-btn {
+        width: 100%;
+        padding: 14px;
+        font-family: 'Inter', sans-serif;
+        font-weight: 600;
+        font-size: 15px;
+        letter-spacing: 0.5px;
+        color: #fff;
+        background: linear-gradient(135deg, #c8aa6e, #a3863c);
+        border: none;
+        border-radius: 10px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 16px rgba(200, 170, 110, 0.25);
+        margin-top: 6px;
+    }
+
+    .login-btn:hover {
+        background: linear-gradient(135deg, #d4b97a, #b8964a);
+        box-shadow: 0 6px 24px rgba(200, 170, 110, 0.35);
+        transform: translateY(-2px);
+    }
+
+    .login-btn:active {
+        transform: translateY(0);
+        box-shadow: 0 2px 8px rgba(200, 170, 110, 0.2);
+    }
+
+    /* ---- Footer Link ---- */
+    .login-footer {
+        text-align: center;
+        margin-top: 28px;
+        padding-top: 22px;
+        border-top: 1px solid rgba(200, 170, 110, 0.1);
+    }
+
+    .login-footer p {
+        font-family: 'Inter', sans-serif;
+        font-size: 14px;
+        color: rgba(240, 230, 211, 0.5);
+        margin: 0;
+    }
+
+    .login-footer a {
+        color: #c8aa6e;
+        text-decoration: none;
+        font-weight: 600;
+        transition: color 0.2s ease;
+    }
+
+    .login-footer a:hover {
+        color: #d4b97a;
+        text-decoration: underline;
+    }
+
+    /* ---- Disable global card hover on this page ---- */
+    .login-page .login-card:hover {
+        transform: none !important;
+        box-shadow:
+            0 8px 32px rgba(0, 0, 0, 0.3),
+            0 0 0 1px rgba(255, 255, 255, 0.04) inset !important;
+    }
+
+    /* ---- Responsive ---- */
+    @media (max-width: 576px) {
+        .login-card {
+            padding: 36px 24px 32px;
+            border-radius: 16px;
+        }
+
+        .login-header h2 {
+            font-size: 22px;
+        }
+
+        .login-field input {
+            padding: 11px 14px;
+            font-size: 14px;
+        }
+    }
+
+    @media (min-width: 577px) and (max-width: 768px) {
+        .login-card {
+            padding: 42px 32px 36px;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+
+<div class="login-page">
+
+    <div class="login-card">
+
+        <!-- Header -->
+        <div class="login-header">
+            <div class="hotel-icon">
+                <i class="fas fa-key"></i>
+            </div>
+            <h2>Welcome Back</h2>
+            <p>Sign in to your Smart Hotel account</p>
+        </div>
+
+        <!-- Login Form -->
+        <form method="POST">
+
+            {% csrf_token %}
+
+            <!-- Username -->
+            <div class="login-field">
+                <label for="id_username">Username</label>
+                <input
+                    type="text"
+                    name="username"
+                    id="id_username"
+                    placeholder="Enter your username"
+                    required>
+            </div>
+
+            <!-- Password -->
+            <div class="login-field">
+                <label for="id_password">Password</label>
+                <input
+                    type="password"
+                    name="password"
+                    id="id_password"
+                    placeholder="Enter your password"
+                    required>
+            </div>
+
+            <!-- Submit -->
+            <button type="submit" class="login-btn">
+                <i class="fas fa-sign-in-alt" style="margin-right: 8px;"></i>
+                Sign In
+            </button>
+
+        </form>
+
+        <!-- Register Link -->
+        <div class="login-footer">
+            <p>Don't have an account? <a href="{% url 'register' %}">Create Account</a></p>
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

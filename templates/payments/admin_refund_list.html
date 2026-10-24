@@ -1,0 +1,119 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container py-4">
+    <h2 class="mb-4">Manage Refund Requests</h2>
+
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-{{ message.tags|default:'info' }}">
+                {{ message }}
+            </div>
+        {% endfor %}
+    {% endif %}
+
+    {% if refund_requests %}
+        <div class="table-responsive">
+            <table class="table table-bordered table-striped align-middle">
+                <thead class="table-dark">
+                    <tr>
+                        <th>Receipt</th>
+                        <th>Customer</th>
+                        <th>Method</th>
+                        <th>Amount</th>
+                        <th>Reason</th>
+                        <th>Status</th>
+                        <th>Razorpay Refund ID</th>
+                        <th>Admin Note</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    {% for refund in refund_requests %}
+                        <tr>
+                            <td>{{ refund.payment.receipt_number }}</td>
+                            <td>{{ refund.payment.booking.user.username }}</td>
+                            <td>{{ refund.payment.get_payment_method_display }}</td>
+                            <td>₹{{ refund.amount }}</td>
+                            <td>{{ refund.reason|truncatechars:120 }}</td>
+                            <td>{{ refund.get_status_display }}</td>
+                            <td>{{ refund.razorpay_refund_id|default:"—" }}</td>
+
+                            <td>
+                                {% if refund.admin_note %}
+                                    {{ refund.admin_note|truncatechars:100 }}
+                                {% else %}
+                                    —
+                                {% endif %}
+                            </td>
+
+                            <td style="min-width: 240px;">
+                                {% if refund.status == "Requested" or refund.status == "Approved" %}
+                                    <form
+                                        method="post"
+                                        action="{% url 'process_refund' refund.id %}"
+                                    >
+                                        {% csrf_token %}
+
+                                        <textarea
+                                            name="admin_note"
+                                            class="form-control mb-2"
+                                            rows="2"
+                                            placeholder="Admin note"
+                                        ></textarea>
+
+                                        {% if refund.payment.payment_method == "Razorpay" %}
+                                            <button
+                                                type="submit"
+                                                name="action"
+                                                value="approve"
+                                                class="btn btn-success btn-sm mb-1"
+                                                onclick="return confirm('Submit this refund to Razorpay?');"
+                                            >
+                                                Process Razorpay Refund
+                                            </button>
+                                        {% else %}
+                                            <button
+                                                type="submit"
+                                                name="action"
+                                                value="manual_complete"
+                                                class="btn btn-success btn-sm mb-1"
+                                                onclick="return confirm('Confirm that the money has actually been returned to the customer?');"
+                                            >
+                                                Record Manual Refund
+                                            </button>
+                                        {% endif %}
+
+                                        <button
+                                            type="submit"
+                                            name="action"
+                                            value="reject"
+                                            class="btn btn-danger btn-sm mb-1"
+                                            onclick="return confirm('Reject this refund request?');"
+                                        >
+                                            Reject
+                                        </button>
+                                    </form>
+                                {% else %}
+                                    <span class="text-muted">
+                                        No further action available
+                                    </span>
+                                {% endif %}
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    {% else %}
+        <div class="alert alert-info">
+            No refund requests found.
+        </div>
+    {% endif %}
+
+    <a href="{% url 'payment_list' %}" class="btn btn-secondary">
+        Back to Payments
+    </a>
+</div>
+{% endblock %}

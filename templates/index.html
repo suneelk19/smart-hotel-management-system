@@ -1,0 +1,576 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}
+Smart Hotel Management
+{% endblock %}
+
+{% block css %}
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+
+<style>
+    /* =============================================
+       HOME PAGE — SCOPED STYLES
+       Only affects the home page via .home-page
+       ============================================= */
+    .home-page {
+        font-family: 'Inter', sans-serif;
+    }
+
+    .home-page h1, .home-page h2, .home-page h3, .home-page h4, .home-page h5 {
+        font-family: 'Playfair Display', serif;
+    }
+
+    /* Override body padding for full hero section */
+    body {
+        padding-top: 0 !important;
+    }
+
+    .navbar {
+        background-color: rgba(33, 37, 41, 0.95) !important;
+    }
+
+    /* ---- Hero Section ---- */
+    .hero-section {
+        position: relative;
+        height: 100vh;
+        min-height: 600px;
+        background: url("{% static 'images/hotel.jpg' %}") center/cover no-repeat;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        color: white;
+        margin-top: 0;
+    }
+
+    .hero-overlay {
+        position: absolute;
+        top: 0; left: 0; right: 0; bottom: 0;
+        background: linear-gradient(rgba(15, 25, 35, 0.6), rgba(15, 25, 35, 0.8));
+        z-index: 1;
+    }
+
+    .hero-content {
+        position: relative;
+        z-index: 2;
+        max-width: 800px;
+        padding: 0 20px;
+        animation: fadeInUp 1s ease-out;
+    }
+
+    .hero-content h1 {
+        font-size: 4.5rem;
+        font-weight: 700;
+        margin-bottom: 20px;
+        color: #f0e6d3;
+        letter-spacing: 1px;
+    }
+
+    .hero-content p {
+        font-size: 1.25rem;
+        margin-bottom: 40px;
+        color: #e0d5c1;
+        font-weight: 400;
+    }
+
+    .btn-gold {
+        background: linear-gradient(135deg, #c8aa6e, #a3863c);
+        color: #fff;
+        padding: 16px 40px;
+        font-size: 1.1rem;
+        font-weight: 600;
+        border-radius: 30px;
+        text-decoration: none;
+        transition: all 0.3s ease;
+        border: none;
+        display: inline-block;
+        box-shadow: 0 4px 15px rgba(200, 170, 110, 0.4);
+    }
+
+    .btn-gold:hover {
+        background: linear-gradient(135deg, #d4b97a, #b8964a);
+        transform: translateY(-3px);
+        color: #fff;
+        box-shadow: 0 6px 20px rgba(200, 170, 110, 0.6);
+    }
+
+    /* ---- Section Headings ---- */
+    .section-title {
+        text-align: center;
+        margin-bottom: 50px;
+    }
+
+    .section-title h2 {
+        font-size: 2.5rem;
+        font-weight: 700;
+        color: #1a2a3a;
+        margin-bottom: 15px;
+    }
+
+    .section-title .divider {
+        height: 3px;
+        width: 80px;
+        background: #c8aa6e;
+        margin: 0 auto;
+        border-radius: 2px;
+    }
+
+    /* ---- Cards Styling ---- */
+    .hotel-card {
+        border: none;
+        border-radius: 16px;
+        overflow: hidden;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        height: 100%;
+        background: #fff;
+    }
+
+    /* Override the global .card:hover from style.css just for these cards to use our smoother animation */
+    .home-page .hotel-card:hover {
+        transform: translateY(-10px) !important;
+        box-shadow: 0 15px 40px rgba(0,0,0,0.12) !important;
+    }
+
+    .hotel-card img {
+        height: 250px;
+        object-fit: cover;
+        transition: transform 0.5s ease;
+    }
+
+    .hotel-card:hover img {
+        transform: scale(1.08);
+    }
+
+    .hotel-card .card-body {
+        padding: 30px 25px;
+    }
+
+    .hotel-card h4 {
+        color: #1a2a3a;
+        font-weight: 700;
+        margin-bottom: 15px;
+    }
+
+    .hotel-card p {
+        color: #666;
+        margin-bottom: 0;
+        line-height: 1.6;
+    }
+
+    /* ---- Services Section ---- */
+    .services-section {
+        background-color: #f8f9fa;
+        padding: 90px 0;
+    }
+
+    .service-box {
+        text-align: center;
+        padding: 40px 20px;
+        background: #fff;
+        border-radius: 16px;
+        box-shadow: 0 5px 20px rgba(0,0,0,0.04);
+        transition: all 0.3s ease;
+        height: 100%;
+        border: 1px solid rgba(0,0,0,0.02);
+    }
+
+    .service-box:hover {
+        transform: translateY(-8px);
+        box-shadow: 0 15px 30px rgba(0,0,0,0.08);
+        border-bottom: 3px solid #c8aa6e;
+    }
+
+    .service-icon {
+        font-size: 40px;
+        color: #c8aa6e;
+        margin-bottom: 25px;
+        transition: transform 0.3s ease;
+    }
+
+    .service-box:hover .service-icon {
+        transform: scale(1.1);
+    }
+
+    .service-box h4 {
+        color: #1a2a3a;
+        font-size: 1.3rem;
+        margin-bottom: 0;
+    }
+
+    /* ---- About Section ---- */
+    .about-section {
+        padding: 100px 0;
+    }
+
+    .about-img-wrap {
+        position: relative;
+        padding: 20px 20px 0 0;
+    }
+
+    .about-img-wrap::after {
+        content: '';
+        position: absolute;
+        top: 0; right: 0;
+        width: 80%; height: 80%;
+        border: 2px solid #c8aa6e;
+        border-radius: 16px;
+        z-index: 1;
+    }
+
+    .about-img {
+        border-radius: 16px;
+        position: relative;
+        z-index: 2;
+        width: 100%;
+        box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+    }
+
+    .about-text {
+        padding-left: 40px;
+    }
+
+    .about-text h2 {
+        font-size: 2.8rem;
+        color: #1a2a3a;
+        margin-bottom: 20px;
+    }
+
+    .about-text p {
+        color: #555;
+        font-size: 1.1rem;
+        line-height: 1.8;
+        margin-bottom: 20px;
+    }
+
+    /* ---- Testimonials ---- */
+    .testimonials-section {
+        background: linear-gradient(135deg, #0f1923 0%, #1a2a3a 100%);
+        padding: 90px 0;
+        color: #fff;
+    }
+
+    .testimonials-section .section-title h2 {
+        color: #fff;
+    }
+
+    .testimonial-card {
+        background: rgba(255, 255, 255, 0.03);
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+        border: 1px solid rgba(255,255,255,0.08);
+        border-radius: 16px;
+        padding: 40px 30px;
+        text-align: center;
+        height: 100%;
+        transition: transform 0.3s ease, background 0.3s ease;
+    }
+
+    .testimonial-card:hover {
+        transform: translateY(-8px);
+        background: rgba(255, 255, 255, 0.05);
+    }
+
+    .stars {
+        color: #c8aa6e;
+        margin-bottom: 20px;
+        font-size: 1.1rem;
+        letter-spacing: 2px;
+    }
+
+    .testimonial-card h5 {
+        font-family: 'Playfair Display', serif;
+        color: #f0e6d3;
+        font-size: 1.4rem;
+        margin-bottom: 15px;
+    }
+
+    .testimonial-card p {
+        color: rgba(240, 230, 211, 0.7);
+        font-style: italic;
+        line-height: 1.7;
+        margin-bottom: 0;
+    }
+
+    /* ---- Contact Section ---- */
+    .contact-section {
+        padding: 90px 0;
+        background-color: #fff;
+    }
+
+    .contact-info-box {
+        text-align: center;
+        padding: 50px 40px;
+        background: #fff;
+        border-radius: 20px;
+        max-width: 900px;
+        margin: 0 auto;
+        box-shadow: 0 15px 40px rgba(0,0,0,0.06);
+        border: 1px solid rgba(0,0,0,0.03);
+    }
+
+    .contact-item {
+        transition: transform 0.3s ease;
+    }
+
+    .contact-item:hover {
+        transform: translateY(-5px);
+    }
+
+    .contact-item i {
+        color: #c8aa6e;
+        margin-bottom: 20px;
+        display: block;
+    }
+
+    .contact-item p {
+        font-size: 1.1rem;
+        color: #444;
+        margin-bottom: 0;
+        font-weight: 500;
+    }
+
+    /* Global spacing fix for messages container if present */
+    .container.mt-3:first-of-type {
+        position: relative;
+        z-index: 10;
+        margin-top: 80px !important;
+    }
+
+    @keyframes fadeInUp {
+        from { opacity: 0; transform: translateY(40px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ---- Responsive ---- */
+    @media (max-width: 991px) {
+        .about-text {
+            padding-left: 0;
+            margin-top: 50px;
+        }
+        .hero-content h1 {
+            font-size: 3.5rem;
+        }
+    }
+
+    @media (max-width: 768px) {
+        .hero-content h1 {
+            font-size: 2.8rem;
+        }
+        .hero-content p {
+            font-size: 1.1rem;
+        }
+        .section-title h2 {
+            font-size: 2rem;
+        }
+        .contact-item {
+            margin-bottom: 30px;
+        }
+        .contact-item:last-child {
+            margin-bottom: 0;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+
+<div class="home-page">
+
+    <!-- Hero Section -->
+    <section class="hero-section">
+        <div class="hero-overlay"></div>
+        <div class="hero-content">
+            <h1>Welcome to Smart Hotel</h1>
+            <p>Experience unparalleled luxury, exceptional service, and unforgettable moments in the heart of the city.</p>
+            <a href="{% url 'rooms' %}" class="btn-gold">Explore Our Rooms</a>
+        </div>
+    </section>
+
+    <!-- Featured Rooms -->
+    <section class="py-5" style="margin-top: 60px; margin-bottom: 40px;">
+        <div class="container">
+            <div class="section-title">
+                <h2>Featured Rooms</h2>
+                <div class="divider"></div>
+            </div>
+
+            <div class="row g-4">
+                <!-- Room 1 -->
+                <div class="col-lg-4 col-md-6">
+                    <div class="hotel-card">
+                        <div class="overflow-hidden">
+                            <img src="{% static 'images/room1.jpg' %}" class="w-100" alt="Deluxe Room">
+                        </div>
+                        <div class="card-body text-center">
+                            <h4>Deluxe Room</h4>
+                            <p>Luxury room with Free WiFi, AC and a complimentary Breakfast spread.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Room 2 -->
+                <div class="col-lg-4 col-md-6">
+                    <div class="hotel-card">
+                        <div class="overflow-hidden">
+                            <img src="{% static 'images/room2.jpg' %}" class="w-100" alt="Premium Room">
+                        </div>
+                        <div class="card-body text-center">
+                            <h4>Premium Room</h4>
+                            <p>Spacious and perfect room tailored for families and business guests.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Room 3 -->
+                <div class="col-lg-4 col-md-6 mx-auto">
+                    <div class="hotel-card">
+                        <div class="overflow-hidden">
+                            <img src="{% static 'images/room3.jpg' %}" class="w-100" alt="Luxury Suite">
+                        </div>
+                        <div class="card-body text-center">
+                            <h4>Luxury Suite</h4>
+                            <p>5-Star luxury suite equipped with premium state-of-the-art facilities.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Services Section -->
+    <section class="services-section">
+        <div class="container">
+            <div class="section-title">
+                <h2>Hotel Amenities</h2>
+                <div class="divider"></div>
+            </div>
+
+            <div class="row g-4">
+                <div class="col-lg-3 col-md-6">
+                    <div class="service-box">
+                        <div class="service-icon"><i class="fas fa-bed"></i></div>
+                        <h4>Luxury Rooms</h4>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-6">
+                    <div class="service-box">
+                        <div class="service-icon"><i class="fas fa-utensils"></i></div>
+                        <h4>Fine Dining</h4>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-6">
+                    <div class="service-box">
+                        <div class="service-icon"><i class="fas fa-swimmer"></i></div>
+                        <h4>Swimming Pool</h4>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-6">
+                    <div class="service-box">
+                        <div class="service-icon"><i class="fas fa-car"></i></div>
+                        <h4>Free Parking</h4>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Hotel -->
+    <section class="about-section">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-lg-6 mb-5 mb-lg-0">
+                    <div class="about-img-wrap">
+                        <img src="{% static 'images/hotel.jpg' %}" class="about-img" alt="Smart Hotel Exterior">
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <div class="about-text">
+                        <h2>Discover Smart Hotel</h2>
+                        <div class="divider mb-4" style="margin: 0; width: 60px;"></div>
+                        <p>
+                            Smart Hotel provides premium accommodation, luxury rooms, delicious food, and excellent customer service at affordable prices.
+                            Our elegantly designed spaces offer a tranquil retreat from the bustling city life.
+                        </p>
+                        <p>
+                            Whether you are here for an important business trip, a memorable family vacation, or a romantic getaway, our dedicated staff ensures your stay is comfortable and unforgettable. Experience hospitality redefined.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Testimonials -->
+    <section class="testimonials-section">
+        <div class="container">
+            <div class="section-title">
+                <h2>Guest Experiences</h2>
+                <div class="divider"></div>
+            </div>
+
+            <div class="row g-4">
+                <div class="col-lg-4 col-md-6">
+                    <div class="testimonial-card">
+                        <div class="stars">
+                            <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+                        </div>
+                        <h5>Amazing Hotel</h5>
+                        <p>"Excellent service and clean rooms. The staff went out of their way to make us feel welcome. Truly a home away from home."</p>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6">
+                    <div class="testimonial-card">
+                        <div class="stars">
+                            <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+                        </div>
+                        <h5>Excellent Staff</h5>
+                        <p>"Friendly staff and delicious food. The on-site restaurant offers a fantastic variety of local and international dishes."</p>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6 mx-auto">
+                    <div class="testimonial-card">
+                        <div class="stars">
+                            <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+                        </div>
+                        <h5>Best Experience</h5>
+                        <p>"Highly recommended for family vacations. The pool area is pristine and perfectly maintained. We will definitely return!"</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact -->
+    <section class="contact-section">
+        <div class="container">
+            <div class="section-title">
+                <h2>Get in Touch</h2>
+                <div class="divider"></div>
+            </div>
+
+            <div class="contact-info-box">
+                <div class="row">
+                    <div class="col-md-4 contact-item">
+                        <i class="fas fa-envelope fa-2x"></i>
+                        <p>hotel@gmail.com</p>
+                    </div>
+                    <div class="col-md-4 contact-item">
+                        <i class="fas fa-phone-alt fa-2x"></i>
+                        <p>+91 9876543210</p>
+                    </div>
+                    <div class="col-md-4 contact-item">
+                        <i class="fas fa-map-marker-alt fa-2x"></i>
+                        <p>Ahmedabad, Gujarat, India</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+</div>
+
+{% endblock %}

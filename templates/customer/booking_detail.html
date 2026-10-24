@@ -1,0 +1,138 @@
+{% extends 'base.html' %}
+
+{% block title %}
+Booking Details
+{% endblock %}
+
+{% block content %}
+
+<div class="container mt-5">
+
+    <div class="card shadow border-0">
+
+        <div class="card-header bg-primary text-white">
+
+            <h3 class="mb-0">
+
+                📄 Booking Details
+
+            </h3>
+
+        </div>
+
+        <div class="card-body">
+
+            <table class="table table-bordered">
+
+                <tr>
+                    <th width="30%">Booking ID</th>
+                    <td>{{ booking.id }}</td>
+                </tr>
+
+                <tr>
+                    <th>Customer</th>
+                    <td>{{ booking.user.username }}</td>
+                </tr>
+
+                <tr>
+                    <th>Room Number</th>
+                    <td>{{ booking.room.room_number }}</td>
+                </tr>
+
+                <tr>
+                    <th>Room Type</th>
+                    <td>{{ booking.room.room_type }}</td>
+                </tr>
+
+                <tr>
+                    <th>Check In</th>
+                    <td>{{ booking.check_in }}</td>
+                </tr>
+
+                <tr>
+                    <th>Check Out</th>
+                    <td>{{ booking.check_out }}</td>
+                </tr>
+
+                <tr>
+                    <th>Adults</th>
+                    <td>{{ booking.adults }}</td>
+                </tr>
+
+            <tr>
+                <th>Children</th>
+                <td>{{ booking.children }}</td>
+            </tr>
+
+            <tr>
+                <th>Total Guests</th>
+                <td>{{ booking.adults|add:booking.children }}</td>
+            </tr>
+
+                <tr>
+                    <th>Status</th>
+                    <td>
+
+                        {% if booking.status == "Approved" %}
+
+                        <span class="badge bg-success">
+
+                            Approved
+
+                        </span>
+
+                        {% elif booking.status == "Pending" %}
+
+                        <span class="badge bg-warning text-dark">
+
+                            Pending
+
+                        </span>
+
+                        {% elif booking.status == "Rejected" %}
+
+                        <span class="badge bg-danger">
+
+                            Rejected
+
+                        </span>
+
+                        {% else %}
+
+                        <span class="badge bg-secondary">
+
+                            {{ booking.status }}
+
+                        </span>
+
+                        {% endif %}
+
+                    </td>
+
+                </tr>
+
+            </table>
+
+            <div class="mt-4">
+                <a href="{% url 'my_bookings' %}" class="btn btn-secondary">
+                    ⬅ Back
+                </a>
+
+                {% if not booking.payments.all and booking.status != "Cancelled" and booking.status != "Rejected" %}
+                <a href="{% url 'make_payment' booking.id %}" class="btn btn-primary">
+                    💳 Pay Now
+                </a>
+                {% endif %}
+
+                <button onclick="window.print()" class="btn btn-success">
+                    🖨 Print
+                </button>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

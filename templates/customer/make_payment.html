@@ -1,0 +1,72 @@
+{% extends 'base.html' %}
+
+{% block title %}
+Make Payment
+{% endblock %}
+
+{% block content %}
+
+<div class="container mt-5">
+
+    <div class="card shadow border-0 mx-auto" style="max-width: 600px;">
+
+        <div class="card-header bg-success text-white">
+
+            <h3 class="mb-0">
+                💳 Secure Payment
+            </h3>
+
+        </div>
+
+        <div class="card-body">
+
+            <h5>Booking Information</h5>
+            <ul class="list-group mb-4">
+                <li class="list-group-item d-flex justify-content-between">
+                    <span>Booking ID:</span>
+                    <strong>{{ booking.id }}</strong>
+                </li>
+                <li class="list-group-item d-flex justify-content-between">
+                    <span>Room Number:</span>
+                    <strong>{{ booking.room.room_number }}</strong>
+                </li>
+                <li class="list-group-item d-flex justify-content-between">
+                    <span>Duration:</span>
+                    <strong>{{ days }} Night(s)</strong>
+                </li>
+                <li class="list-group-item d-flex justify-content-between fs-5 text-success">
+                    <span>Total Amount:</span>
+                    <strong>₹ {{ total_amount }}</strong>
+                </li>
+            </ul>
+
+            <form method="POST">
+                {% csrf_token %}
+
+                <div class="mb-3">
+                    <label class="form-label">Payment Method</label>
+                    <select name="payment_method" class="form-select" required>
+                        <option value="UPI">UPI</option>
+                        <option value="Credit Card">Credit Card</option>
+                        <option value="Debit Card">Debit Card</option>
+                        <option value="Net Banking">Net Banking</option>
+                        <option value="Cash">Cash (Pay at Counter)</option>
+                    </select>
+                </div>
+
+                <div class="d-grid mt-4">
+                    <button type="submit" class="btn btn-success btn-lg">
+                        Submit Payment
+                    </button>
+                </div>
+
+                <div class="text-center mt-3">
+                    <a href="{% url 'my_bookings' %}" class="text-secondary text-decoration-none">Cancel Payment</a>
+                </div>
+
+            </form>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

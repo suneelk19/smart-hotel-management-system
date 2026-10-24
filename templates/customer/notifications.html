@@ -1,0 +1,97 @@
+{% extends 'base.html' %}
+
+{% block title %}
+Notifications
+{% endblock %}
+
+{% block content %}
+
+<div class="container mt-5">
+
+    <div class="card shadow border-0">
+
+        <div class="card-header bg-info text-white">
+
+            <h3 class="mb-0">
+
+                🔔 My Notifications
+
+            </h3>
+
+        </div>
+
+        <div class="card-body">
+
+            {% if notifications %}
+
+            <div class="list-group">
+
+                {% for notification in notifications %}
+
+                <div class="list-group-item">
+
+                    <div class="d-flex justify-content-between">
+
+                        <div>
+
+                            <h6 class="mb-1">
+
+                                {{ notification.title }}
+
+                            </h6>
+
+                            <p class="mb-1">
+
+                                {{ notification.message }}
+
+                            </p>
+
+                        </div>
+
+                        <small class="text-muted">
+
+                            {{ notification.created_at }}
+
+                        </small>
+
+                    </div>
+
+                </div>
+
+                {% endfor %}
+
+            </div>
+
+            {% else %}
+
+            <div class="alert alert-info text-center">
+
+                <h5>
+
+                    No Notifications Available
+
+                </h5>
+
+            </div>
+
+            {% endif %}
+
+            <div class="mt-4">
+
+                <a href="{% url 'customer_dashboard' %}"
+
+                   class="btn btn-primary">
+
+                    ⬅ Back to Dashboard
+
+                </a>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

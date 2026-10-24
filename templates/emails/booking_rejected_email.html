@@ -1,0 +1,83 @@
+﻿<!DOCTYPE html>
+<html>
+<head><meta charset="UTF-8"></head>
+<body style="margin:0;padding:0;background:#f4f4f4;">
+
+<table width="100%" cellpadding="0" cellspacing="0">
+<tr><td align="center">
+
+<table width="650" cellpadding="20" cellspacing="0"
+       style="background:white;margin-top:30px;border-radius:10px;font-family:Arial,sans-serif;">
+
+  <tr>
+    <td align="center" style="background:#dc3545;color:white;border-radius:10px 10px 0 0;">
+      <h1>&#127968; Smart Hotel Management System</h1>
+    </td>
+  </tr>
+
+  <tr>
+    <td>
+      <h2>Hello {{ customer_name }},</h2>
+
+      <p>
+        We regret to inform you that your booking request has been
+        <strong style="color:#dc3545;">rejected</strong> by our team.
+      </p>
+
+      <hr>
+
+      <h3 style="color:#dc3545;">Booking Details</h3>
+
+      <table width="100%" cellpadding="6" style="border-collapse:collapse;">
+        <tr style="background:#f8f9fa;">
+          <td><b>Booking ID</b></td>
+          <td>{{ booking_id }}</td>
+        </tr>
+        <tr>
+          <td><b>Room Number</b></td>
+          <td>{{ room }}</td>
+        </tr>
+        <tr style="background:#f8f9fa;">
+          <td><b>Check In</b></td>
+          <td>{{ check_in }}</td>
+        </tr>
+        <tr>
+          <td><b>Check Out</b></td>
+          <td>{{ check_out }}</td>
+        </tr>
+        <tr style="background:#f8f9fa;">
+          <td><b>Status</b></td>
+          <td><span style="color:#dc3545;font-weight:bold;">&#10060; Rejected</span></td>
+        </tr>
+      </table>
+
+      <hr>
+
+      <p style="color:#555;">
+        If a payment was made for this booking, our team will process a full refund
+        within 5-7 business days. Please contact us if you have any questions.
+      </p>
+
+      <p>
+        We apologize for any inconvenience caused. You are welcome to make a new booking
+        for available rooms.
+      </p>
+
+      <p>Thank you for choosing Smart Hotel.<br><br>
+        Regards,<br><b>Smart Hotel Team</b>
+      </p>
+    </td>
+  </tr>
+
+  <tr>
+    <td align="center" style="background:#dc3545;color:white;border-radius:0 0 10px 10px;">
+      &#169; 2026 Smart Hotel Management System
+    </td>
+  </tr>
+
+</table>
+</td></tr>
+</table>
+
+</body>
+</html>

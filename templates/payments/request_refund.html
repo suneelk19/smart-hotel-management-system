@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container py-4">
+    <div class="card shadow-sm mx-auto" style="max-width: 650px;">
+        <div class="card-header bg-primary text-white">
+            <h4 class="mb-0">Request a Refund</h4>
+        </div>
+
+        <div class="card-body">
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="alert alert-{{ message.tags|default:'info' }}">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            {% endif %}
+
+            <p><strong>Receipt:</strong> {{ payment.receipt_number }}</p>
+            <p><strong>Booking ID:</strong> {{ payment.booking.id }}</p>
+            <p><strong>Payment Method:</strong> {{ payment.get_payment_method_display }}</p>
+            <p><strong>Payment Amount:</strong> ₹{{ payment.amount }}</p>
+            <p><strong>Payment Status:</strong> {{ payment.status }}</p>
+
+            <div class="alert alert-warning">
+                This form requests a refund for the full payment amount.
+                Submitting a request does not guarantee approval.
+            </div>
+
+            <form method="post">
+                {% csrf_token %}
+
+                <div class="mb-3">
+                    <label for="reason" class="form-label">
+                        Reason for Refund
+                    </label>
+
+                    <textarea
+                        name="reason"
+                        id="reason"
+                        class="form-control"
+                        rows="5"
+                        maxlength="2000"
+                        required
+                        placeholder="Please explain why you need a refund."
+                    ></textarea>
+                </div>
+
+                <button type="submit" class="btn btn-primary">
+                    Submit Refund Request
+                </button>
+
+                <a href="{% url 'my_payments' %}"
+                   class="btn btn-secondary">
+                    Cancel
+                </a>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

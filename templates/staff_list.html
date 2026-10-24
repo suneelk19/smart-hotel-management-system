@@ -1,0 +1,117 @@
+{% extends 'base.html' %}
+
+{% block title %}
+Staff Management
+{% endblock %}
+
+{% block content %}
+
+<div class="container mt-5">
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+
+        <h2>Hotel Staff</h2>
+
+        <a href="{% url 'add_staff' %}" class="btn btn-success">
+            + Add Staff
+        </a>
+
+    </div>
+
+    <!-- Search Form -->
+
+    <form method="GET" class="row mb-4">
+
+        <div class="col-md-10">
+
+            <input
+                type="text"
+                name="q"
+                class="form-control"
+                placeholder="Search by Name, Designation, Phone or Email..."
+                value="{{ query }}">
+
+        </div>
+
+        <div class="col-md-2">
+
+            <button type="submit" class="btn btn-primary w-100">
+                Search
+            </button>
+
+        </div>
+
+    </form>
+
+    <table class="table table-bordered table-hover">
+
+        <thead class="table-dark">
+
+            <tr>
+
+                <th>Name</th>
+                <th>Designation</th>
+                <th>Phone</th>
+                <th>Email</th>
+                <th>Salary</th>
+                <th>Joining Date</th>
+                <th>Action</th>
+
+            </tr>
+
+        </thead>
+
+        <tbody>
+
+            {% for staff in staffs %}
+
+            <tr>
+
+                <td>{{ staff.name }}</td>
+
+                <td>{{ staff.designation }}</td>
+
+                <td>{{ staff.phone }}</td>
+
+                <td>{{ staff.email }}</td>
+
+                <td>₹ {{ staff.salary }}</td>
+
+                <td>{{ staff.joining_date }}</td>
+
+                <td>
+
+                    <a href="{% url 'edit_staff' staff.id %}"
+                       class="btn btn-warning btn-sm">
+                        Edit
+                    </a>
+
+                    <a href="{% url 'delete_staff' staff.id %}"
+                       class="btn btn-danger btn-sm"
+                       onclick="return confirm('Are you sure you want to delete this staff member?')">
+                        Delete
+                    </a>
+
+                </td>
+
+            </tr>
+
+            {% empty %}
+
+            <tr>
+
+                <td colspan="7" class="text-center">
+                    No Staff Found.
+                </td>
+
+            </tr>
+
+            {% endfor %}
+
+        </tbody>
+
+    </table>
+
+</div>
+
+{% endblock %}

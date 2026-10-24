@@ -1,0 +1,73 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container py-4">
+    <h2 class="mb-4">My Refund Requests</h2>
+
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-{{ message.tags|default:'info' }}">
+                {{ message }}
+            </div>
+        {% endfor %}
+    {% endif %}
+
+    {% if refund_requests %}
+        <div class="table-responsive">
+            <table class="table table-bordered table-striped align-middle">
+                <thead class="table-dark">
+                    <tr>
+                        <th>Receipt</th>
+                        <th>Booking ID</th>
+                        <th>Amount</th>
+                        <th>Reason</th>
+                        <th>Status</th>
+                        <th>Requested On</th>
+                        <th>Admin Note</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    {% for refund in refund_requests %}
+                        <tr>
+                            <td>{{ refund.payment.receipt_number }}</td>
+                            <td>{{ refund.payment.booking.id }}</td>
+                            <td>₹{{ refund.amount }}</td>
+                            <td>{{ refund.reason|truncatechars:100 }}</td>
+                            <td>
+                                {% if refund.status == "Processed" %}
+                                    <span class="badge bg-success">
+                                        {{ refund.get_status_display }}
+                                    </span>
+                                {% elif refund.status == "Rejected" or refund.status == "Failed" %}
+                                    <span class="badge bg-danger">
+                                        {{ refund.get_status_display }}
+                                    </span>
+                                {% elif refund.status == "Processing" %}
+                                    <span class="badge bg-warning text-dark">
+                                        {{ refund.get_status_display }}
+                                    </span>
+                                {% else %}
+                                    <span class="badge bg-secondary">
+                                        {{ refund.get_status_display }}
+                                    </span>
+                                {% endif %}
+                            </td>
+                            <td>{{ refund.requested_at|date:"d M Y, h:i A" }}</td>
+                            <td>{{ refund.admin_note|default:"—" }}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    {% else %}
+        <div class="alert alert-info">
+            You have not submitted any refund requests yet.
+        </div>
+    {% endif %}
+
+    <a href="{% url 'my_payments' %}" class="btn btn-secondary">
+        Back to Payments
+    </a>
+</div>
+{% endblock %}

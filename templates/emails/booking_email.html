@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+</head>
+
+<body style="margin:0;padding:0;background:#f4f4f4;">
+
+<table width="100%" cellpadding="0" cellspacing="0">
+
+<tr>
+
+<td align="center">
+
+<table width="650"
+    cellpadding="20"
+    cellspacing="0"
+    style="background:white;
+            margin-top:30px;
+            border-radius:10px;
+            font-family:Arial,sans-serif;">
+
+<tr>
+
+<td align="center"
+        style="background:#0d6efd;
+        color:white;
+        border-radius:10px 10px 0 0;">
+
+<h1>
+🏨 Smart Hotel Management System
+</h1>
+
+</td>
+
+</tr>
+
+<tr>
+
+<td>
+
+<h2>
+
+Hello {{ customer_name }},
+
+</h2>
+
+<p>
+
+Your booking has been successfully confirmed.
+
+</p>
+
+<hr>
+
+<table width="100%">
+
+<tr>
+
+<td>
+
+<b>Booking ID</b>
+
+</td>
+
+<td>
+
+{{ booking_id }}
+
+</td>
+
+</tr>
+
+<tr>
+
+<td>
+
+<b>Room</b>
+
+</td>
+
+<td>
+
+{{ room }}
+
+</td>
+
+</tr>
+
+<tr>
+
+<td>
+
+<b>Check In</b>
+
+</td>
+
+<td>
+
+{{ check_in }}
+
+</td>
+
+</tr>
+
+<tr>
+
+<td>
+
+<b>Check Out</b>
+
+</td>
+
+<td>
+
+{{ check_out }}
+
+</td>
+
+</tr>
+
+<tr>
+
+<td>
+
+<b>Guests</b>
+
+</td>
+
+<td>
+
+{{ guests }}
+
+</td>
+
+</tr>
+
+<tr>
+
+<td>
+
+<b>Amount</b>
+
+</td>
+
+{% comment %} <td>
+
+₹ {{ amount }}
+
+</td>
+
+</tr> {% endcomment %}
+
+<tr>
+    <td><b>Booking Amount</b></td>
+    <td>INR {{ amount|floatformat:2 }}</td>
+</tr>
+
+<tr>
+    <td><b>Payment Method</b></td>
+    <td>{{ payment_method }}</td>
+</tr>
+
+<tr>
+    <td><b>Payment Status</b></td>
+    <td>{{ payment_status }}</td>
+</tr>
+
+<tr>
+
+<td>
+
+<b>Payment Status</b>
+
+</td>
+
+<td>
+
+{{ payment_status }}
+
+</td>
+
+</tr>
+
+</table>
+
+<hr>
+
+<p>
+
+Please find your Booking Receipt attached with this email.
+
+</p>
+
+<p>
+
+Thank you for choosing Smart Hotel.
+
+</p>
+
+<br>
+
+<p>
+
+Regards,
+
+<br>
+
+<b>Smart Hotel Team</b>
+
+</p>
+
+</td>
+
+</tr>
+
+<tr>
+
+<td align="center"
+        style="background:#0d6efd;
+        color:white;
+        border-radius:0 0 10px 10px;">
+
+© 2026 Smart Hotel Management System
+
+</td>
+
+</tr>
+
+</table>
+
+</td>
+
+</tr>
+
+</table>
+
+</body>
+
+</html>

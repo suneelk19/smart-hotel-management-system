@@ -1,0 +1,692 @@
+{% extends 'base.html' %}
+
+{% block title %}
+Payment Management
+{% endblock %}
+
+<style>
+
+    /* ===================================== */
+    /* Payment Table Hover Effect */
+    /* ===================================== */
+
+    tbody tr:hover{
+
+        background:#f8f9fa;
+
+        transition:.3s;
+
+    }
+
+
+    /* ===================================== */
+    /* Dashboard Cards Hover */
+    /* ===================================== */
+
+.card{
+
+    transition:.3s;
+
+}
+
+.card:hover{
+
+    transform:translateY(-5px);
+
+}
+
+</style>
+
+{% block content %}
+
+<!-- ================================================= -->
+<!-- Payment Management Page Start -->
+<!-- Smart Hotel Management System -->
+<!-- ================================================= -->
+
+<div class="container-lg mt-5 mb-5">
+
+    <!-- ============================================= -->
+    <!-- Page Heading + Add Payment Button -->
+    <!-- ============================================= -->
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+
+        <div>
+
+            <h2 class="fw-bold text-primary">
+                💳 Payment Management
+            </h2>
+
+            <p class="text-muted mb-0">
+                Manage all hotel payments from one place.
+            </p>
+
+        </div>
+
+        <div>
+
+            <!-- Right Side Buttons -->
+
+        <div>
+
+        <!-- Manage Refunds Button -->
+        <a href="{% url 'admin_refund_list' %}"
+        class="btn btn-warning me-2">
+
+            🔄 Manage Refunds
+
+        </a>
+
+        <!-- Add Payment Button -->
+
+        <a href="{% url 'add_payment' %}"
+        class="btn btn-success me-2">
+
+            + Add Payment
+
+        </a>
+
+        <!-- Export Excel Button -->
+
+        <a href="{% url 'export_payments_excel' %}"
+        class="btn btn-success">
+
+            📥 Export Excel
+
+        </a>
+
+        <!-- ====================================== -->
+        <!-- Export PDF Button -->
+        <!-- ====================================== -->
+
+        <a href="{% url 'export_payments_pdf' %}"
+        class="btn btn-danger">
+
+            📄  Export PDF
+
+        </a>
+
+    </div>
+
+        </div>
+
+    </div>
+
+    <!-- ============================================= -->
+    <!-- Search Section -->
+    <!-- Customer Name, Method ya Status Search -->
+    <!-- ============================================= -->
+
+    <div class="card shadow-sm border-0 mb-4">
+
+        <div class="card-body">
+
+            <form method="GET">
+
+                <div class="row">
+
+                    <div class="col-md-10">
+
+                        <div class="input-group">
+
+                            <span class="input-group-text">
+
+                                🔍
+
+                            </span>
+
+                            <input
+                                type="text"
+                                class="form-control"
+                                name="q"
+                                placeholder="Search by Customer Name, Payment Method or Status..."
+                                value="{{ query }}">
+
+                        </div>
+
+                    </div>
+
+                    <div class="col-md-2">
+
+                <!-- ============================================= -->
+                <!-- Search Button with Font Awesome Icon -->
+                <!-- ============================================= -->
+
+                <button
+                class="btn btn-primary w-100">
+
+                <i class="fas fa-search"></i>
+
+                    Search
+
+                </button>
+
+                    </div>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
+    <!-- ============================================= -->
+    <!-- Dashboard Cards -->
+    <!-- ============================================= -->
+
+    <div class="row g-4">
+
+        <!-- Total Payments -->
+
+        <div class="col-lg-3 col-md-6">
+
+            <div class="card shadow border-0 rounded-4">
+
+                <div class="card-body text-center">
+
+                    <h1 class="text-primary">
+
+                        {{ total_payments }}
+
+                    </h1>
+
+                    <h5>
+
+                        Total Payments
+
+                    </h5>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <!-- Paid -->
+
+        <div class="col-lg-3 col-md-6">
+
+            <div class="card shadow border-0 rounded-4 bg-success text-white">
+
+                <div class="card-body text-center">
+
+                    <h1>
+
+                        {{ paid_payments }}
+
+                    </h1>
+
+                    <h5>
+
+                        Paid Payments
+
+                    </h5>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <!-- Pending -->
+
+        <div class="col-lg-3 col-md-6">
+
+            <div class="card shadow border-0 rounded-4 bg-warning">
+
+                <div class="card-body text-center">
+
+                    <h1>
+
+                        {{ pending_payments }}
+
+                    </h1>
+
+                    <h5>
+
+                        Pending Payments
+
+                    </h5>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <!-- Failed -->
+
+        <div class="col-lg-3 col-md-6">
+
+            <div class="card shadow border-0 rounded-4 bg-danger text-white">
+
+                <div class="card-body text-center">
+
+                    <h1>
+
+                        {{ failed_payments }}
+
+                    </h1>
+
+                    <h5>
+
+                        Failed Payments
+
+                    </h5>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- ============================================= -->
+    <!-- Revenue Card -->
+    <!-- Sirf Paid Payments ka Revenue -->
+    <!-- ============================================= -->
+
+    <div class="card shadow border-0 rounded-4 mt-5">
+
+        <div class="card-body text-center">
+
+            <div class="display-5">
+
+                💰
+
+            </div>
+
+            <h2 class="fw-bold text-success">
+
+                ₹ {{ total_revenue }}
+
+            </h2>
+
+            <h5 class="text-muted">
+
+                Total Revenue
+
+            </h5>
+
+        </div>
+
+    </div>
+
+    <!-- ============================================= -->
+    <!-- Payment Analytics Chart -->
+    <!-- Chart.js Doughnut Chart -->
+    <!-- ============================================= -->
+
+    <div class="row justify-content-center mt-5">
+
+        <div class="col-lg-6 mx-auto">
+
+            <div class="card shadow border-0 rounded-4">
+
+                <div class="card-header bg-success text-white">
+
+                    <h5 class="mb-0">
+
+                        📊 Payment Status Analytics
+
+                    </h5>
+
+                </div>
+
+                <div class="card-body">
+
+                <canvas
+                    id="paymentChart"
+                    style="
+                    max-width:320px;
+                    max-height:320px;
+                    margin:auto;
+                    ">
+                </canvas>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+
+        <!-- ============================================= -->
+        <!-- Payment Table -->
+        <!-- ============================================= -->
+        <!-- Table Card Start -->
+        <div class="card shadow border-0 rounded-4 mt-5" id="payment-section">
+
+        <div class="card-body">
+
+        <div class="table-responsive">
+
+            <table class="table table-bordered table-hover align-middle">
+
+                <thead class="table-dark text-center">
+
+                <tr>
+
+                    <th>ID</th>
+                    <th>Receipt No.</th>
+                    <th>Booking</th>
+                    <th>Amount</th>
+                    <th>Method</th>
+                    <th>Date</th>
+                    <th>Status</th>
+                    <th width="260">Action</th>
+
+                </tr>
+
+            </thead>
+
+            <tbody>
+
+            {% for payment in payments %}
+
+                <tr>
+
+                    <td>{{ payment.id }}</td>
+
+                    <td>
+
+                        <span class="badge bg-secondary">
+
+                            {{ payment.receipt_number }}
+
+                        </span>
+
+                    </td>
+
+                    <td>
+
+                        {{ payment.booking }}
+
+                    </td>
+
+                    <td class="text-end fw-bold text-success">
+
+                        ₹ {{ payment.amount }}
+
+                    </td>
+
+                    <td>
+
+                        {{ payment.payment_method }}
+
+                    </td>
+
+                    <td>
+
+                        {{ payment.payment_date|date:"d M Y" }}
+
+                    </td>
+
+                    <td>
+
+                        {% if payment.status == "Paid" %}
+
+                            <span class="badge bg-success">
+
+                                Paid
+
+                            </span>
+
+                        {% elif payment.status == "Pending" %}
+
+                            <span class="badge bg-warning text-dark">
+
+                                Pending
+
+                            </span>
+
+                        {% elif payment.status == "Failed" %}
+
+                            <span class="badge bg-danger">
+
+                                Failed
+
+                            </span>
+
+                        {% else %}
+
+                            <span class="badge bg-secondary">
+
+                                {{ payment.status }}
+
+                            </span>
+
+                        {% endif %}
+
+                    </td>
+
+                    <td>
+
+                        <a href="{% url 'payment_receipt' payment.id %}"
+                           class="btn btn-success btn-sm">
+
+                            Receipt
+
+                        </a>
+
+                        <a href="{% url 'payment_receipt_pdf' payment.id %}"
+                           class="btn btn-dark btn-sm">
+
+                            PDF
+
+                        </a>
+
+
+
+                        <a href="{% url 'edit_payment' payment.id %}"
+                           class="btn btn-primary btn-sm">
+
+                            Edit
+
+                        </a>
+
+                        <a href="{% url 'delete_payment' payment.id %}"
+                           class="btn btn-danger btn-sm"
+                           onclick="return confirm('Delete this payment?')">
+
+                            Delete
+
+                        </a>
+
+                    </td>
+
+                </tr>
+
+            {% empty %}
+
+                <tr>
+
+                    <td colspan="8" class="text-center text-danger">
+
+                        No Payment Found.
+
+                    </td>
+
+                </tr>
+
+            {% endfor %}
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+</div>
+
+</div>
+
+<!-- ====================================== -->
+<!-- Payment Pagination -->
+<!-- ====================================== -->
+
+<nav class="mt-4">
+
+    <ul class="pagination justify-content-center">
+
+        <!-- Previous Button -->
+
+        {% if payments.has_previous %}
+
+        <li class="page-item">
+
+            <a class="page-link"
+               href="?page={{ payments.previous_page_number }}&q={{ query }}#payment-section">
+
+                Previous
+
+            </a>
+
+        </li>
+
+        {% endif %}
+
+        <!-- Current Page -->
+
+        <li class="page-item active">
+
+            <span class="page-link">
+
+                Page {{ payments.number }}
+
+                of
+
+                {{ payments.paginator.num_pages }}
+
+            </span>
+
+        </li>
+
+        <!-- Next Button -->
+
+        {% if payments.has_next %}
+
+        <li class="page-item">
+
+            <a class="page-link"
+               href="?page={{ payments.next_page_number }}&q={{ query }}#payment-section">
+
+                Next
+
+            </a>
+
+        </li>
+
+        {% endif %}
+
+    </ul>
+
+</nav>
+
+<!-- ============================================= -->
+<!-- Payment Analytics Chart -->
+<!-- ============================================= -->
+
+<script>
+
+document.addEventListener("DOMContentLoaded", function () {
+
+    const ctx = document.getElementById("paymentChart");
+
+    if (!ctx) {
+
+        console.log("Canvas Not Found");
+
+        return;
+
+    }
+
+    if (typeof Chart === "undefined") {
+
+        console.log("Chart.js Not Loaded");
+
+        return;
+
+    }
+
+    new Chart(ctx, {
+
+        type: "doughnut",
+
+        data: {
+
+            labels: [
+
+                "Paid",
+
+                "Pending",
+
+                "Failed"
+
+            ],
+
+            datasets: [
+
+                {
+
+                    data: [
+
+                        {{ paid_payments|default:0 }},
+
+                        {{ pending_payments|default:0 }},
+
+                        {{ failed_payments|default:0 }}
+
+                    ],
+
+                    backgroundColor: [
+
+                        "#198754",
+
+                        "#ffc107",
+
+                        "#dc3545"
+
+                    ],
+
+                    borderColor: "#ffffff",
+
+                    borderWidth: 2
+
+                }
+
+            ]
+
+        },
+
+        options: {
+
+            responsive: true,
+
+            maintainAspectRatio: true,
+
+            plugins: {
+
+                legend: {
+
+                    position: "bottom"
+
+                }
+
+            }
+
+        }
+
+    });
+
+});
+
+</script>
+
+{% endblock %}

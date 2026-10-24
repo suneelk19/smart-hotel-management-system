@@ -1,0 +1,1073 @@
+{% extends 'base.html' %}
+
+{% block title %}
+Customer Dashboard
+{% endblock %}
+
+{% block content %}
+
+<div class="container mt-4">
+
+    <!-- Welcome Section -->
+
+    <div class="alert alert-primary shadow-sm border-0">
+
+        <div class="d-flex justify-content-between align-items-center">
+
+            <div>
+
+                <h3>
+                    👋 Welcome {{ request.user.first_name|default:request.user.username }}
+                </h3>
+
+                <p class="mb-0 text-muted">
+                    Welcome to Smart Hotel Management System
+                </p>
+
+            </div>
+
+            <div class="text-end">
+
+                <h6>
+                    {% now "l" %}
+                </h6>
+
+                <small>
+                    {% now "d F Y" %}
+                </small>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+
+    <!-- Dashboard Cards -->
+
+    <div class="row mt-4">
+
+        <div class="col-md-3 mb-4">
+
+            <div class="card shadow border-0 bg-primary text-white">
+
+                <div class="card-body text-center">
+
+                    <h1>
+                        {{ total_bookings }}
+                    </h1>
+
+                    <h5>Total Bookings</h5>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div class="col-md-3 mb-4">
+
+            <div class="card shadow border-0 bg-success text-white">
+
+                <div class="card-body text-center">
+
+                    <h1>
+                        {{ approved_bookings }}
+                    </h1>
+
+                    <h5>Approved</h5>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div class="col-md-3 mb-4">
+
+            <div class="card shadow border-0 bg-warning">
+
+                <div class="card-body text-center">
+
+                    <h1>
+                        {{ pending_bookings }}
+                    </h1>
+
+                    <h5>Pending</h5>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div class="col-md-3 mb-4">
+
+            <div class="card shadow border-0 bg-danger text-white">
+
+                <div class="card-body text-center">
+
+                    <h1>
+                        {{ rejected_bookings }}
+                    </h1>
+
+                    <h5>Rejected</h5>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+
+    <!-- Second Row -->
+
+    <div class="row">
+
+        <div class="col-md-4 mb-4">
+
+            <div class="card shadow border-0 bg-info text-white">
+
+                <div class="card-body text-center">
+
+                    <h2>
+
+                        {{ total_payments }}
+
+                    </h2>
+
+                    <h5>
+
+                        Total Payments
+
+                    </h5>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div class="col-md-4 mb-4">
+
+            <div class="card shadow border-0 bg-secondary text-white">
+
+                <div class="card-body text-center">
+
+                    <h2>
+
+                        {{ notifications|length }}
+
+                    </h2>
+
+                    <h5>
+
+                        Notifications
+
+                    </h5>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div class="col-md-4 mb-4">
+
+            <div class="card shadow border-0 bg-dark text-white">
+
+                <div class="card-body text-center">
+
+                    <h2>
+
+                        {{ request.user.username }}
+
+                    </h2>
+
+                    <h5>
+
+                        Customer
+
+                    </h5>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+
+    {% comment %} <!-- Quick Actions -->
+
+    <div class="card shadow mt-4">
+
+        <div class="card-header bg-primary text-white">
+
+            <h5 class="mb-0">
+
+                ⚡ Quick Actions
+
+            </h5>
+
+        </div>
+
+        <div class="card-body text-center">
+
+            <a href="{% url 'rooms' %}" class="btn btn-primary m-2">
+
+                🏨 Book Room
+
+            </a>
+
+            <a href="{% url 'my_bookings' %}" class="btn btn-success m-2">
+
+                📅 My Bookings
+
+            </a>
+
+            <a href="{% url 'my_payments' %}" class="btn btn-warning m-2">
+
+                💳 Payments
+
+            </a>
+
+            <a href="{% url 'my_profile' %}" class="btn btn-info m-2">
+
+                👤 Profile
+
+            </a>
+
+            <a href="{% url 'my_feedback' %}" class="btn btn-danger m-2">
+
+                ⭐ Feedback
+
+            </a>
+
+        </div>
+
+    </div> {% endcomment %}
+
+
+    <!-- Quick Actions -->
+    <div class="card shadow mt-4">
+
+        <div class="card-header bg-primary text-white">
+            <h5 class="mb-0">
+                ⚡ Quick Actions
+            </h5>
+        </div>
+
+        <div class="card-body text-center">
+
+            <!-- Book Room -->
+            <a href="{% url 'rooms' %}" class="btn btn-primary m-2 px-4">
+                🏨 Book a Room
+            </a>
+
+            <!-- My Bookings -->
+            <a href="{% url 'my_bookings' %}" class="btn btn-success m-2 px-4">
+                📅 My Bookings
+            </a>
+
+            <!-- Payments -->
+            <a href="{% url 'my_payments' %}" class="btn btn-warning m-2 px-4">
+                💳 Payment History
+            </a>
+
+            <!-- Refund Requests -->
+            <a href="{% url 'my_refund_requests' %}" class="btn btn-outline-warning m-2 px-4">
+                📋 Refund Requests
+            </a>
+
+            <!-- Profile -->
+            <a href="{% url 'my_profile' %}" class="btn btn-info m-2 px-4 text-white">
+                👤 My Profile
+            </a>
+
+            <!-- Feedback -->
+            <a href="{% url 'my_feedback' %}" class="btn btn-danger m-2 px-4">
+                ⭐ Give Feedback
+            </a>
+
+
+            <a href="{% url 'ai_concierge' %}" class="btn btn-dark m-2">
+
+                🤖 AI Concierge
+
+            </a>
+
+        </div>
+
+    </div>
+
+
+    <!-- ===================================== -->
+    <!-- Recent Bookings -->
+    <!-- ===================================== -->
+
+    <div class="card shadow mt-5">
+
+        <div class="card-header bg-success text-white">
+
+            <h5 class="mb-0">
+
+                📅 My Recent Bookings
+
+            </h5>
+
+        </div>
+
+        <div class="card-body">
+
+            <div class="table-responsive">
+
+                <table class="table table-bordered table-hover">
+
+                    <thead class="table-dark">
+
+                        <tr>
+
+                            <th>Room</th>
+
+                            <th>Check In</th>
+
+                            <th>Check Out</th>
+
+                            <th>Status</th>
+
+                        </tr>
+
+                    </thead>
+
+                    <tbody>
+
+                        {% for booking in recent_bookings %}
+
+                        <tr>
+
+                            <td>
+
+                                {{ booking.room.room_number }}
+
+                            </td>
+
+                            <td>
+
+                                {{ booking.check_in }}
+
+                            </td>
+
+                            <td>
+
+                                {{ booking.check_out }}
+
+                            </td>
+
+                            <td>
+
+                                {% if booking.status == "Approved" %}
+
+                                <span class="badge bg-success">
+
+                                    Approved
+
+                                </span>
+
+                                {% elif booking.status == "Pending" %}
+
+                                <span class="badge bg-warning text-dark">
+
+                                    Pending
+
+                                </span>
+
+                                {% elif booking.status == "Rejected" %}
+
+                                <span class="badge bg-danger">
+
+                                    Rejected
+
+                                </span>
+
+                                {% else %}
+
+                                <span class="badge bg-secondary">
+
+                                    {{ booking.status }}
+
+                                </span>
+
+                                {% endif %}
+
+                            </td>
+
+                        </tr>
+
+                        {% empty %}
+
+                        <tr>
+
+                            <td colspan="4" class="text-center">
+
+                                No Booking Found
+
+                            </td>
+
+                        </tr>
+
+                        {% endfor %}
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+
+    <!-- ===================================== -->
+    <!-- Recent Payments -->
+    <!-- ===================================== -->
+
+    <div class="card shadow mt-5">
+
+        <div class="card-header bg-warning">
+
+            <h5 class="mb-0">
+
+                💳 My Recent Payments
+
+            </h5>
+
+        </div>
+
+        <div class="card-body">
+
+            <div class="table-responsive">
+
+                <table class="table table-bordered table-hover">
+
+                    <thead class="table-dark">
+
+                        <tr>
+
+                            <th>Receipt No.</th>
+
+                            <th>Amount</th>
+
+                            <th>Method</th>
+
+                            <th>Status</th>
+
+                        </tr>
+
+                    </thead>
+
+                    <tbody>
+
+                        {% for payment in recent_payments %}
+
+                        <tr>
+
+                            <td>
+
+                                {{ payment.receipt_number }}
+
+                            </td>
+
+                            <td>
+
+                                ₹ {{ payment.amount }}
+
+                            </td>
+
+                            <td>
+
+                                {{ payment.payment_method }}
+
+                            </td>
+
+                            <td>
+
+                                {% if payment.status == "Paid" %}
+
+                                <span class="badge bg-success">
+
+                                    Paid
+
+                                </span>
+
+                                {% elif payment.status == "Pending" %}
+
+                                <span class="badge bg-warning text-dark">
+
+                                    Pending
+
+                                </span>
+
+                                {% elif payment.status == "Refunded" %}
+
+                                <span class="badge bg-secondary">
+
+                                    Refunded
+
+                                </span>
+
+                                {% else %}
+
+                                <span class="badge bg-danger">
+
+                                    Failed
+
+                                </span>
+
+                                {% endif %}
+
+                            </td>
+
+                        </tr>
+
+                        {% empty %}
+
+                        <tr>
+
+                            <td colspan="4" class="text-center">
+
+                                No Payment Found
+
+                            </td>
+
+                        </tr>
+
+                        {% endfor %}
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- ===================================== -->
+    <!-- Notifications -->
+    <!-- ===================================== -->
+
+    <div class="card shadow mt-5">
+
+        <div class="card-header bg-info text-white">
+
+            <h5 class="mb-0">
+
+                🔔 Latest Notifications
+
+            </h5>
+
+        </div>
+
+        <div class="card-body">
+
+            {% if notifications %}
+
+            <ul class="list-group">
+
+                {% for notice in notifications %}
+
+                <li class="list-group-item d-flex justify-content-between">
+
+                    <div>
+
+                        {{ notice.message }}
+
+                    </div>
+
+                    <small class="text-muted">
+
+                        {{ notice.created_at }}
+
+                    </small>
+
+                </li>
+
+                {% endfor %}
+
+            </ul>
+
+            {% else %}
+
+            <div class="alert alert-light text-center">
+
+                No Notifications Available
+
+            </div>
+
+            {% endif %}
+
+        </div>
+
+    </div>
+
+
+
+    <!-- ===================================== -->
+    <!-- Customer Profile -->
+    <!-- ===================================== -->
+
+    <div class="row mt-5">
+
+        <div class="col-lg-4">
+
+            <div class="card shadow border-0">
+
+                <div class="card-header bg-primary text-white">
+
+                    <strong>
+
+                        👤 My Profile
+
+                    </strong>
+
+                </div>
+
+                <div class="card-body text-center">
+
+                    <img src="https://ui-avatars.com/api/?name={{ request.user.username }}&background=0D6EFD&color=fff&size=120"
+                        class="rounded-circle mb-3" alt="Customer">
+
+                    <h4>
+
+                        {{ request.user.get_full_name|default:request.user.username }}
+
+                    </h4>
+
+                    <p class="text-muted">
+
+                        Registered Customer
+
+                    </p>
+
+                    <hr>
+
+                    <p>
+
+                        📧 {{ request.user.email }}
+
+                    </p>
+
+                    <p>
+
+                        📅 Joined :
+
+                        {{ request.user.date_joined|date:"d M Y" }}
+
+                    </p>
+
+                    <a href="{% url 'edit_profile' %}" class="btn btn-primary">
+
+                        Edit Profile
+
+                    </a>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+
+        <div class="col-lg-8">
+
+            <div class="card shadow border-0">
+
+                <div class="card-header bg-success text-white">
+
+                    <strong>
+                        📈 Booking Status
+                    </strong>
+
+                </div>
+
+                <div class="card-body">
+
+                    {% if total_bookings > 0 %}
+
+                    <div style="height:300px;">
+
+                        <canvas id="bookingChart">
+                        </canvas>
+
+                    </div>
+
+                    {% else %}
+
+                    <div class="text-center py-5">
+
+                        <i class="fas fa-calendar-times fa-4x text-secondary mb-3"></i>
+
+                        <h4 class="text-muted">
+
+                            No Booking Available
+
+                        </h4>
+
+                        <p class="text-secondary">
+
+                            You have not booked any room yet.
+
+                        </p>
+
+                        <a href="{% url 'booking_list' %}" class="btn btn-success">
+
+                            Book Your First Room
+
+                        </a>
+
+                    </div>
+
+                    {% endif %}
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <!-- ===================================== -->
+        <!-- Recent Feedback -->
+        <!-- ===================================== -->
+
+        <div class="card shadow mt-5">
+
+            <div class="card-header bg-warning">
+
+                <strong>
+
+                    ⭐ My Feedback
+
+                </strong>
+
+            </div>
+
+            <div class="card-body">
+
+                {% if feedback %}
+
+                <table class="table table-bordered">
+
+                    <thead class="table-dark">
+
+                        <tr>
+
+                            <th>Subject</th>
+
+                            <th>Message</th>
+
+                            <th>Date</th>
+
+                        </tr>
+
+                    </thead>
+
+                    <tbody>
+
+                        {% for item in feedback %}
+
+                        <tr>
+
+                            <td>
+
+                                {{ item.subject }}
+
+                            </td>
+
+                            <td>
+
+                                {{ item.message|truncatechars:50 }}
+
+                            </td>
+
+                            <td>
+
+                                {{ item.created_at }}
+
+                            </td>
+
+                        </tr>
+
+                        {% endfor %}
+
+                    </tbody>
+
+                </table>
+
+                {% else %}
+
+                <div class="alert alert-light text-center">
+
+                    No Feedback Submitted Yet.
+
+                </div>
+
+                {% endif %}
+
+            </div>
+
+        </div>
+
+
+        <!-- ===================================== -->
+        <!-- Customer Dashboard Footer -->
+        <!-- ===================================== -->
+
+        <hr class="mt-5">
+
+        <div class="row text-center">
+
+            <div class="col-md-3">
+
+                <h5>
+                    🏨 Smart Hotel
+                </h5>
+
+            </div>
+
+            <div class="col-md-3">
+
+                <h5>
+                    👨 Customer Panel
+                </h5>
+
+            </div>
+
+            <div class="col-md-3">
+
+                <h5>
+                    📅 {% now "Y" %}
+                </h5>
+
+            </div>
+
+            <div class="col-md-3">
+
+                <h5 class="text-success">
+                    ✅ Account Active
+                </h5>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+
+    <!-- ===================================== -->
+    <!-- Booking Status Chart -->
+    <!-- ===================================== -->
+
+    <!-- <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+
+        document.addEventListener("DOMContentLoaded", function () {
+
+            {% if total_bookings > 0 %}
+
+            const ctx = document.getElementById("bookingChart");
+
+            if (ctx) {
+
+                new Chart(ctx, {
+
+                    type: "pie",
+
+                    data: {
+
+                        labels: [
+
+                            "Approved",
+
+                            "Pending",
+
+                            "Rejected"
+
+                        ],
+
+                        datasets: [{
+
+                            data: [
+                                {{ approved_bookings|default:0 }},
+                                {{ pending_bookings|default:0 }},
+                                {{ rejected_bookings|default:0 }}
+                            ],
+
+            backgroundColor: [
+
+            "#28a745",
+
+            "#ffc107",
+
+            "#dc3545"
+
+        ],
+
+            borderColor: "#ffffff",
+
+            borderWidth: 2
+
+                }]
+
+            },
+
+            options: {
+
+            responsive: true,
+
+            maintainAspectRatio: false,
+
+            plugins: {
+
+                legend: {
+
+                    position: "bottom"
+
+                }
+
+            }
+
+        }
+
+        });
+
+    }
+
+        {% endif %}
+
+});
+
+
+    </script> -->
+
+    <!-- ===================================== -->
+    <!-- Booking Status Chart -->
+    <!-- ===================================== -->
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    {% if total_bookings > 0 %}
+
+    <div id="bookingChartData" data-approved="{{ approved_bookings|default:0 }}"
+        data-pending="{{ pending_bookings|default:0 }}" data-rejected="{{ rejected_bookings|default:0 }}"
+        style="display: none;">
+    </div>
+
+    <script>
+
+        document.addEventListener("DOMContentLoaded", function () {
+
+            const chartData = document.getElementById("bookingChartData");
+
+            const ctx = document.getElementById("bookingChart");
+
+            if (chartData && ctx) {
+
+                const approved = Number(chartData.dataset.approved);
+                const pending = Number(chartData.dataset.pending);
+                const rejected = Number(chartData.dataset.rejected);
+
+                new Chart(ctx, {
+
+                    type: "pie",
+
+                    data: {
+
+                        labels: [
+
+                            "Approved",
+
+                            "Pending",
+
+                            "Rejected"
+
+                        ],
+
+                        datasets: [{
+
+                            data: [
+
+                                approved,
+
+                                pending,
+
+                                rejected
+
+                            ],
+
+                            backgroundColor: [
+
+                                "#28a745",
+
+                                "#ffc107",
+
+                                "#dc3545"
+
+                            ],
+
+                            borderColor: "#ffffff",
+
+                            borderWidth: 2
+
+                        }]
+
+                    },
+
+                    options: {
+
+                        responsive: true,
+
+                        maintainAspectRatio: false,
+
+                        plugins: {
+
+                            legend: {
+
+                                position: "bottom"
+
+                            }
+
+                        }
+
+                    }
+
+                });
+
+            }
+
+        });
+
+    </script>
+
+    {% endif %}
+
+
+
+
+    {% endblock %}

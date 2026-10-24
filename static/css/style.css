@@ -1,0 +1,65 @@
+
+
+
+
+body{
+    background:#f8f9fa;
+}
+
+.card{
+    transition:0.3s;
+}
+
+.card:hover{
+    transform:scale(1.05);
+}
+
+section{
+    background:linear-gradient(to right,#0d6efd,#212529);
+}
+
+
+
+
+    body{
+        padding-top:80px;
+    }
+
+
+
+
+.card{
+
+    transition:.3s;
+
+}
+
+.card:hover{
+
+    transform:translateY(-8px);
+
+    box-shadow:0 15px 30px rgba(0,0,0,.2);
+
+}
+
+
+
+
+.btn{
+
+    transition:.3s;
+
+}
+
+.btn:hover{
+
+    transform:scale(1.05);
+
+}
+
+
+.table tbody tr:hover{
+
+    background:#f8f9fa;
+
+}

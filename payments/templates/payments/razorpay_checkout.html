@@ -1,0 +1,264 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Razorpay Checkout - Smart Hotel</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f4f7fb;
+            margin: 0;
+            padding: 30px 15px;
+        }
+
+        .payment-card {
+            max-width: 550px;
+            margin: 30px auto;
+            padding: 30px;
+            background: #ffffff;
+            border-radius: 12px;
+            box-shadow: 0 4px 18px rgba(0, 0, 0, 0.08);
+        }
+
+        h1 {
+            color: #173b68;
+            text-align: center;
+            font-size: 25px;
+        }
+
+        h2 {
+            text-align: center;
+            font-size: 20px;
+        }
+
+        .details {
+            margin: 25px 0;
+            padding: 15px;
+            background: #f8fafc;
+            border-radius: 8px;
+        }
+
+        .details p {
+            display: flex;
+            justify-content: space-between;
+            gap: 15px;
+            padding: 9px 0;
+            margin: 0;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        .details p:last-child {
+            border-bottom: none;
+        }
+
+        .amount {
+            color: #198754;
+            font-size: 19px;
+            font-weight: bold;
+        }
+
+        button {
+            width: 100%;
+            padding: 14px;
+            background: #198754;
+            color: white;
+            border: none;
+            border-radius: 7px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        button:disabled {
+            background: #8aab98;
+            cursor: not-allowed;
+        }
+
+        #payment-message {
+            margin-top: 18px;
+            text-align: center;
+            overflow-wrap: anywhere;
+        }
+
+        .dashboard-link {
+            display: none;
+            text-align: center;
+            margin-top: 18px;
+        }
+
+        .dashboard-link a {
+            color: #0d6efd;
+            text-decoration: none;
+            font-weight: bold;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="payment-card">
+
+    <h1>Smart Hotel Management System</h1>
+    <h2>Complete Your Booking Payment</h2>
+
+    <div class="details">
+        <p>
+            <span>Booking ID:</span>
+            <strong>{{ booking.id }}</strong>
+        </p>
+
+        <p>
+            <span>Room:</span>
+            <strong>{{ booking.room.room_number }}</strong>
+        </p>
+
+        <p>
+            <span>Check-in:</span>
+            <strong>{{ booking.check_in }}</strong>
+        </p>
+
+        <p>
+            <span>Check-out:</span>
+            <strong>{{ booking.check_out }}</strong>
+        </p>
+
+        <p>
+            <span>Total Amount:</span>
+            <strong class="amount">₹{{ payment.amount }}</strong>
+        </p>
+    </div>
+
+    <form id="csrf-form">
+        {% csrf_token %}
+    </form>
+
+    <button type="button" id="pay-button">
+        Pay with Razorpay
+    </button>
+
+    <p id="payment-message" role="status" aria-live="polite"></p>
+
+    <div id="dashboard-link" class="dashboard-link">
+        <a href="{% url 'customer_dashboard' %}">
+            Go to Customer Dashboard
+        </a>
+    </div>
+
+</div>
+
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+
+<script>
+    const payButton = document.getElementById("pay-button");
+    const message = document.getElementById("payment-message");
+    const dashboardLink = document.getElementById("dashboard-link");
+
+    const csrfInput = document.querySelector(
+        "#csrf-form [name=csrfmiddlewaretoken]"
+    );
+
+    const csrfToken = csrfInput ? csrfInput.value : "";
+
+    // Django generates this URL; it does not depend on a hard-coded path.
+    const dashboardUrl = "{% url 'customer_dashboard' %}";
+
+    payButton.addEventListener("click", function () {
+
+        if (!window.Razorpay) {
+            message.textContent =
+                "Razorpay Checkout could not load. Check your internet connection and try again.";
+            return;
+        }
+
+        payButton.disabled = true;
+        message.textContent = "Opening secure checkout...";
+
+        const options = {
+            key: "{{ razorpay_key_id|escapejs }}",
+            amount: {{ amount_paise }},
+            currency: "INR",
+            name: "Smart Hotel Management System",
+            description: "Booking #{{ booking.id }}",
+            order_id: "{{ razorpay_order_id|escapejs }}",
+
+            handler: async function (response) {
+                message.textContent = "Verifying payment...";
+
+                try {
+                    const result = await fetch(
+                        "{% url 'razorpay_verify_payment' %}",
+                        {
+                            method: "POST",
+                            headers: {
+                                "Content-Type": "application/json",
+                                "X-CSRFToken": csrfToken
+                            },
+                            body: JSON.stringify(response)
+                        }
+                    );
+
+                    const data = await result.json();
+
+                    if (result.ok && data.success) {
+                        message.textContent =
+                            data.message || "Payment verified successfully.";
+
+                        payButton.style.display = "none";
+                        dashboardLink.style.display = "block";
+
+                        // Use the server's URL if provided, otherwise dashboard.
+                        const destination =
+                            data.receipt_url || dashboardUrl;
+
+                        // Allow a short moment for the success message to appear.
+                        window.setTimeout(function () {
+                            window.location.assign(destination);
+                        }, 1200);
+
+                    } else {
+                        message.textContent =
+                            data.message || "Payment verification failed.";
+
+                        payButton.disabled = false;
+                    }
+
+                } catch (error) {
+                    message.textContent =
+                        "Could not confirm the verification response. Check My Payments before retrying.";
+
+                    payButton.disabled = false;
+                }
+            },
+
+            modal: {
+                ondismiss: function () {
+                    message.textContent =
+                        "Checkout closed. Check My Payments before trying again.";
+
+                    payButton.disabled = false;
+                }
+            },
+
+            theme: {
+                color: "#1f6feb"
+            }
+        };
+
+        const checkout = new Razorpay(options);
+
+        checkout.on("payment.failed", function (response) {
+            message.textContent =
+                response.error.description ||
+                "Payment failed. Please try again.";
+
+            payButton.disabled = false;
+        });
+
+        checkout.open();
+    });
+</script>
+
+</body>
+</html>

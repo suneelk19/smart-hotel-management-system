@@ -1,0 +1,338 @@
+{% extends 'base.html' %}
+
+{% block title %}
+My Profile
+{% endblock %}
+
+{% block content %}
+
+<div class="container mt-5">
+
+    <div class="row">
+
+        <!-- Left Profile Card -->
+
+        <div class="col-lg-4">
+
+            <div class="card shadow border-0">
+
+                <div class="card-body text-center">
+
+                    {% if profile.profile_picture %}
+
+                        <img src="{{ profile.profile_picture.url }}"
+                             class="rounded-circle img-fluid mb-3"
+                             style="width:180px;height:180px;object-fit:cover;">
+
+                    {% else %}
+
+                        <img src="https://ui-avatars.com/api/?name={{ request.user.username }}&background=0D6EFD&color=fff&size=180"
+                             class="rounded-circle img-fluid mb-3">
+
+                    {% endif %}
+
+                    <h3>
+
+                        {{ request.user.get_full_name|default:request.user.username }}
+
+                    </h3>
+
+                    <p class="text-muted">
+
+                        Customer
+
+                    </p>
+
+                    <a href="{% url 'edit_profile' %}"
+                       class="btn btn-primary w-100">
+
+                        ✏ Edit Profile
+
+                    </a>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- Right Information -->
+
+        <div class="col-lg-8">
+
+            <div class="card shadow border-0">
+
+                <div class="card-header bg-primary text-white">
+
+                    <h4 class="mb-0">
+
+                        👤 Customer Information
+
+                    </h4>
+
+                </div>
+
+                <div class="card-body">
+
+                    <table class="table table-bordered">
+
+                        <tr>
+
+                            <th width="30%">
+
+                                Username
+
+                            </th>
+
+                            <td>
+
+                                {{ request.user.username }}
+
+                            </td>
+
+                        </tr>
+
+                        <tr>
+
+                            <th>
+
+                                Full Name
+
+                            </th>
+
+                            <td>
+
+                                {{ request.user.get_full_name }}
+
+                            </td>
+
+                        </tr>
+
+                        <tr>
+
+                            <th>
+
+                                Email
+
+                            </th>
+
+                            <td>
+
+                                {{ request.user.email }}
+
+                            </td>
+
+                        </tr>
+
+                        <tr>
+
+                            <th>
+
+                                Phone
+
+                            </th>
+
+                            <td>
+
+                                {{ profile.phone }}
+
+                            </td>
+
+                        </tr>
+
+                        <tr>
+
+                            <th>
+
+                                Address
+
+                            </th>
+
+                            <td>
+
+                                {{ profile.address }}
+
+                            </td>
+
+                        </tr>
+
+                        <tr>
+
+                            <th>
+
+                                Gender
+
+                            </th>
+
+                            <td>
+
+                                {{ profile.gender }}
+
+                            </td>
+
+                        </tr>
+
+                        <tr>
+
+                            <th>
+
+                                Date of Birth
+
+                            </th>
+
+                            <td>
+
+                                {{ profile.date_of_birth }}
+
+                            </td>
+
+                        </tr>
+
+                        <tr>
+
+                            <th>
+
+                                Aadhaar Number
+
+                            </th>
+
+                            <td>
+
+                                {{ profile.aadhar_number }}
+
+                            </td>
+
+                        </tr>
+
+                        <tr>
+
+                            <th>
+
+                                City
+
+                            </th>
+
+                            <td>
+
+                                {{ profile.city }}
+
+                            </td>
+
+                        </tr>
+
+                        <tr>
+
+                            <th>
+
+                                State
+
+                            </th>
+
+                            <td>
+
+                                {{ profile.state }}
+
+                            </td>
+
+                        </tr>
+
+                        <tr>
+
+                            <th>
+
+                                Pincode
+
+                            </th>
+
+                            <td>
+
+                                {{ profile.pincode }}
+
+                            </td>
+
+                        </tr>
+
+                        <tr>
+
+                            <th>
+
+                                Joined On
+
+                            </th>
+
+                            <td>
+
+                                {{ request.user.date_joined|date:"d M Y" }}
+
+                            </td>
+
+                        </tr>
+
+                    </table>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- Quick Buttons -->
+
+    <div class="row mt-4">
+
+        <div class="col-md-3">
+
+            <a href="{% url 'customer_dashboard' %}"
+
+               class="btn btn-primary w-100">
+
+                🏠 Dashboard
+
+            </a>
+
+        </div>
+
+        <div class="col-md-3">
+
+            <a href="{% url 'my_bookings' %}"
+
+               class="btn btn-success w-100">
+
+                📅 My Bookings
+
+            </a>
+
+        </div>
+
+        <div class="col-md-3">
+
+            <a href="{% url 'my_payments' %}"
+
+               class="btn btn-warning w-100">
+
+                💳 My Payments
+
+            </a>
+
+        </div>
+
+        <div class="col-md-3">
+
+            <a href="{% url 'my_feedback' %}"
+
+               class="btn btn-danger w-100">
+
+                ⭐ Feedback
+
+            </a>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

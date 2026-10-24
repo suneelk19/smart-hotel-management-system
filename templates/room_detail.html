@@ -1,0 +1,143 @@
+
+{% extends 'base.html' %}
+
+{% block title %}
+Room Details - Hotel Management
+{% endblock %}
+
+{% block content %}
+
+<div class="container mt-5 mb-5">
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2>Room Details</h2>
+
+        <a href="{% url 'rooms' %}" class="btn btn-outline-secondary">
+            &larr; Back to Rooms
+        </a>
+    </div>
+
+    <div class="card shadow-sm">
+        <div class="row g-0">
+
+            <!-- Room Image -->
+            <div class="col-md-6">
+
+                {% if room.image %}
+                    <img
+                        src="{{ room.image.url }}"
+                        alt="Room {{ room.room_number }}"
+                        class="img-fluid rounded-start w-100"
+                        style="height: 400px; object-fit: cover;">
+                {% else %}
+                    <div class="d-flex justify-content-center align-items-center bg-light"
+                         style="height: 400px;">
+                        <span class="text-muted">Room image not available</span>
+                    </div>
+                {% endif %}
+
+            </div>
+
+            <!-- Room Information -->
+            <div class="col-md-6">
+                <div class="card-body p-4">
+
+                    <h3 class="card-title">
+                        Room {{ room.room_number }}
+                    </h3>
+
+                    <p class="text-muted">
+                        {{ room.room_type }} Room
+                    </p>
+
+                    <hr>
+
+                    <h4 class="text-success mb-4">
+                        ₹ {{ room.price }}
+                        <small class="text-muted fs-6">/ night</small>
+                    </h4>
+
+                    <p>
+                        <strong>Room Number:</strong>
+                        {{ room.room_number }}
+                    </p>
+
+                    <p>
+                        <strong>Room Type:</strong>
+                        {{ room.room_type }}
+                    </p>
+
+                    <p>
+                        <strong>Guest Capacity:</strong>
+                        {{ room.capacity }} person(s)
+                    </p>
+
+                    <p>
+                        <strong>Availability:</strong>
+
+                        {% if room.available %}
+                            <span class="badge bg-success">Available</span>
+                        {% else %}
+                            <span class="badge bg-danger">Occupied</span>
+                        {% endif %}
+                    </p>
+
+                    <hr>
+
+                    <h5>Room Description</h5>
+
+                    <p class="text-secondary">
+                        {% if room.description %}
+                            {{ room.description|linebreaksbr }}
+                        {% else %}
+                            No description available for this room.
+                        {% endif %}
+                    </p>
+
+                    <div class="mt-4">
+
+                        {% if user.is_staff %}
+
+                            <a href="{% url 'edit_room' room.id %}"
+                               class="btn btn-warning">
+                                Edit Room
+                            </a>
+
+                        {% elif user.is_authenticated and room.available %}
+
+                            <a href="{% url 'add_booking' %}?room={{ room.id }}"
+                               class="btn btn-primary">
+                                Book This Room
+                            </a>
+
+                        {% elif user.is_authenticated %}
+
+                            <button class="btn btn-secondary" disabled>
+                                Room Not Available
+                            </button>
+
+                        {% else %}
+
+                            <a href="{% url 'login' %}"
+                               class="btn btn-primary">
+                                Login to Book
+                            </a>
+
+                            <a href="{% url 'register' %}"
+                               class="btn btn-outline-primary">
+                                Register
+                            </a>
+
+                        {% endif %}
+
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+</div>
+
+{% endblock %}
